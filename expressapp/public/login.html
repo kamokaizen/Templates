@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" ng-app="domeshield">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <title>Express App</title>
+    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <script src="assets/js/core/modernizr-2.8.3.min.js"></script>
+    <link rel="shortcut icon" type="image/png" href="assets/img/favicons/favicon.ico" >
+    <script type="text/javascript" src="assets/js/core/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/bootstrap.min.js"></script>
+    <script charset="utf-8" src="assets/js/plugins.js"></script>
+    <script charset="utf-8" src="assets/js/main.js"></script>
+    <script type="text/javascript" src="assets/js/core/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/angular-1.4.8.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/angular-ui-router.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/angular-animate.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/angular-route.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/angular-cookies.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/bootstrap.min.js"></script>
+    <!--    <script type="text/javascript" src="assets/js/plugins/select2/select2.js"></script>
+            <script type="text/javascript" src="assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
+            <script type="text/javascript" src="assets/js/plugins/datatables/dataTables.bootstrap.js"></script>
+            <script type="text/javascript" src="assets/js/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>-->
+    <script type="text/javascript" src="assets/js/plugins/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="assets/js/plugins/jquery.scrollLock.min.js"></script>
+    <script type="text/javascript" src="assets/js/plugins/angular-inform/angular-inform.min.js"></script>
+    <!-- Load Angular Related Scripts -->
+    <script type="text/javascript" src="js/domeshield.js"></script>
+    <script type="text/javascript" src="js/controllers/login.controller.js"></script>
+    <script type="text/javascript" src="js/services/call-service.js"></script>
+    <script type="text/javascript" src="js/services/authentication-service.js"></script>
+</head>
+
+<body id="home">
+    <div ng-controller="LoginController" ng-init="init()">
+        <!--[if lt IE 8]>
+                <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+            <![endif]-->
+        <div id="preloader">
+            <div id="status">&nbsp;</div>
+        </div>
+        <nav class="navbar navbar-default">
+            <div class="container">
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="wizard">
+                        <div class="leftText">
+                            <h1>Express App Login</h1>
+                            <h2>Node Js - Angular Template project</h2>
+                            <p></p>
+                        </div>
+                        <!-- login block -->
+                        <div class="loginBlock">
+                            <div class="title">
+                                <h3>Login</h3>
+                            </div>
+                            <div class="blockContent">
+                                <form id="loginForm" role="form" ng-submit="login()">
+                                    <div class="alert alert-danger" ng-if="errorMessage.length != 0">
+                                        {{ errorMessage}}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="awssecret">Username:</label>
+                                        <input type="text" class="form-control" id="username" name="username" placeholder="" ng-model="username" autofocus>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="awssecret">Password:</label>
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="" ng-model="password">
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" ng-disabled="loginPreloaderFlag" class="btn btn-lg btn-danger btn-block" ><i ng-if="loginPreloaderFlag" class="fa fa-refresh fa-spin-left"></i> SIGN IN</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- END login block -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

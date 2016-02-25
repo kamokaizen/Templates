@@ -1,0 +1,39 @@
+<!-- Add Account Modal -->
+<div id="addSecurityObject" class="modal large fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="block block-themed block-transparent remove-margin-b">
+                <div class="block-header bg-primary-darker">
+                    <ul class="block-options">
+                        <li>
+                            <button name="button" type="button" data-dismiss="modal"> <i class="si si-close"></i></button>
+                        </li>
+                    </ul>
+                    <h3 class="block-title">Add Security Object</h3>
+                </div>
+                <div class="block-content">
+                	<div class="form-group">
+                         <label for="pName">Policy Name</label>
+                         <input type="text" class="form-control" id="pName" name="pName" placeholder="" ng-model="selectedObjectCopy['object_name']">
+                    </div>
+                    <div class="form-group">
+                         <label for="pRemark">Remark</label>
+                         <textarea class="form-control noresize" id="pRemark" name="pRemark" placeholder="" ng-model="selectedObjectCopy['object_remark']"></textarea>
+                    </div>
+                    <div class="form-group">
+                    	 <label for="pRemark">Blocked Group</label>
+                         <div class="col-lg-12" isteven-multi-select helper-elements="filter" max-labels="3" 
+               						 input-model="categoryOptions" output-model="selectedGroups" 
+               						 button-label="category_name" item-label="category_name" 
+               						 tick-property="ticked">
+					 	 </div>	
+                    </div>
+                    <div class="form-group">
+                        <button data-dismiss="modal" ng-click="save()" type="button" class="btn btn-sm btn-success pull-right"><i class="fa fa-floppy-o "></i> {{action == "add" ? 'Create' : 'Update'}}</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

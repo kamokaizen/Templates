@@ -1,0 +1,119 @@
+<!-- Add Policy Modal -->
+<div id="addPolicy" class="modal large fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="block block-themed block-transparent remove-margin-b">
+                <div class="block-header bg-primary-darker">
+                    <ul class="block-options">
+                        <li>
+                            <button name="button" type="button" data-dismiss="modal"> <i class="si si-close"></i></button>
+                        </li>
+                    </ul>
+                    <h3 class="block-title">{{action == 'add' ? 'Add' : 'Update'}} Policy</h3>
+                </div>
+                <div class="block-content">
+                    <form name="settingsForm">
+                        <div class="block">
+                            <ul class="nav nav-tabs nav-tabs-alt">
+                                <li class="active">
+                                    <a data-target="#policyName" data-toggle="tab" href="">Select Networks</a>
+                                </li>
+                                <li>
+                                    <a data-target="#policyApplyPolicy" ng-style="{'cursor' : (selectedNetworks.length == 0 || (settingsForm.pRemark.$invalid && !settingsForm.pRemark.$pristine)) ? 'not-allowed' : 'pointer'}" data-toggle="{{selectedNetworks.length == 0 || (settingsForm.pRemark.$invalid && !settingsForm.pRemark.$pristine) && '' || 'tab'}}">Settings</a>
+                                </li>
+                            </ul>
+                            <div class="block-content tab-content">
+                                <div class="tab-pane active" id="policyName">
+                                    <div class="form-group clearfix" ng-class="{ 'has-error' : selectedNetworks.length == 0, 'has-success':selectedNetworks.length != 0 }">
+                                        <label>Network</label>
+                                        <div class="multi-select-isteven" isteven-multi-select helper-elements="filter" max-labels="3" input-model="availableNetworks" output-model="selectedNetworks" button-label="name" item-label="name" tick-property="ticked" selection-mode="single">
+                                        </div>
+                                        <p ng-show="selectedNetworks.length == 0 && availableNetworks.length != 0" class="help-block">Please select a network.</p>
+                                        <p ng-show="availableNetworks.length == 0" class="help-block">There is no available network.</p>
+                                    </div>
+                                    <div class="form-group" ng-class="{ 'has-error' : settingsForm.pRemark.$invalid && !settingsForm.pRemark.$pristine, 'has-success':settingsForm.pRemark.$valid }">
+                                        <label for="pRemark">Remark</label>
+                                        <textarea autocomplete="off" class="form-control noresize" id="pRemark" name="pRemark" placeholder="" ng-model="selectedRule.remark" ng-minlength="0" ng-maxlength="250" maxlength="250"></textarea>
+                                        <p ng-show="settingsForm.pRemark.$invalid && !settingsForm.pRemark.$pristine" class="help-block">This field should be between 1-250 characters.</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <button ng-if="action == 'add' " type="button" class="btn btn-sm btn-success pull-right" id="nextButton" data-toggle="tab" ng-disabled="selectedNetworks.length == 0 || (settingsForm.pRemark.$invalid && !settingsForm.pRemark.$pristine)" ng-click="nextClick()">Next</button>
+                                        <button ng-if="action == 'update' " type="button" class="btn btn-sm btn-success pull-right" ng-disabled="selectedNetworks.length == 0 || (settingsForm.pRemark.$invalid && !settingsForm.pRemark.$pristine)" ng-click="saveRule()"> <i class="fa fa-refresh "></i> Update</button>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="policyApplyPolicy">
+                                    <div class="form-group">
+                                        <label for="bwmode" class="pointer" style="float:left; margin:9px 5px 0 0;">Only B/W Mode {{bwFlag ? ' Enabled' : ' Disabled'}}</label>
+                                        <label class="css-input switch switch-sm rotate" ng-class="bwFlag ? 'switch-success' : 'switch-reverse'">
+                                            <input id="bwmode" name="bwmode" type="checkbox" ng-model="bwFlag" ng-click="disableDropdowns();"><span></span>
+                                        </label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group clearfix" ng-class="{ 'has-error' : !canCreateFlag}">
+                                                <label>Security Rule</label>
+                                                <div class="multi-select-isteven" isteven-multi-select helper-elements="" max-labels="3" input-model="requirements.srules" output-model="selectedSecurityRule" button-label="name" item-label="name" tick-property="ticked" is-disabled="bwFlag" selection-mode="single" on-item-click="canCreate(data);">
+                                                </div>
+                                                <p ng-show="!canCreateFlag && !bwFlag" class="help-block">Please select at least a Security Rule or a Category Rule or a B/W List.</p>
+                                                <p ng-show="!canCreateFlag && bwFlag" class="help-block">Please select at least one B/W List.</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group clearfix">
+                                                <label>Category Rule</label>
+                                                <div class="multi-select-isteven" isteven-multi-select helper-elements="" max-labels="3" input-model="requirements.crules" output-model="selectedCategoryRule" button-label="name" item-label="name" tick-property="ticked" is-disabled="bwFlag" selection-mode="single" on-item-click="canCreate(data);">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <label>Domain B/W List </label>
+                                    <div class="clearfix"></div>
+                                    <div class="scrollPanel">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Type</th>
+                                                    <th style="width:20px;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-if="requirements.bwlists.length == 0">
+                                                    <td colspan="100" class="noData">No Data Available</td>
+                                                </tr>
+                                                <tr ng-repeat="item in requirements.bwlists">
+                                                    <td class="">{{item.name}}</td>
+                                                    <td class="">{{item.list_type ? 'WhiteList' : 'BlackList'}}</td>
+                                                    <td>
+                                                        <label class="css-input css-checkbox css-checkbox-xs css-checkbox-primary">
+                                                            <input ng-model="item.selected" ng-checked="item.selected ? true : false;" ng-change="canCreate()" type="checkbox"><span></span></label>
+                                                    </td>
+                                                    <!--<td><a href="#" class="btn btn-sm"><i class="fa fa-pencil"></i></a> <a href="#" class="btn btn-sm"><i class="fa fa-trash"></i></a></td>-->
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!--
+	                                <div class="form-group">
+	                                    <label>Logging</label>
+	                                    <select multiple="multiple" id="" name="" class="radio-select" disabled="">
+	                                        <option value="Log Only Security" selected>Log Everything</option>
+	                                        <option value="Item 2">Item 2</option>
+	                                        <option value="Item 3">Item 3</option>
+	                                    </select>
+	                                </div>
+	                                -->
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-sm btn-success pull-right" ng-click="saveRule()" ng-disabled="!canCreateFlag"><i ng-class="action == 'add' ? 'fa fa-floppy-o' : 'fa fa-refresh' "></i> {{action == 'add' ? 'Add' : 'Update'}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Add Policy Modal -->

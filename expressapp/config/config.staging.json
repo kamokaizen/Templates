@@ -1,0 +1,11 @@
+{
+    "mysql": {
+        "database": "express_db",
+        "connectionLimit": 100,
+        "queueLimit": 100,
+        "host": "localhost",
+        "port": 3306,
+        "user": "root",
+        "password": "root"
+    }
+}

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" ng-app="domeshield">
+	<head>
+	    <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+	    <title>Comodo cDome Shield</title>	    
+            <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+            <link rel="stylesheet" href="assets/css/style.css">
+            <!--<link rel="stylesheet" href="assets/js/plugins/multiple-select/multiple-select.css">-->
+            <link rel="stylesheet" href="assets/css/angularjs-multi-select.css">
+            <link rel="stylesheet" href="assets/js/plugins/angular-inform/angular-inform.min.css">
+            <link rel="shortcut icon" type="image/png" href="assets/img/favicons/favicon.ico" >
+            
+            <script type="text/javascript" src="assets/js/core/angular-underscore.min.js"></script>	
+			<script type="text/javascript" src="assets/js/core/jquery.min.js"></script>
+			<script type="text/javascript" src="assets/js/core/jquery-ui.min.js"></script>
+			<script type="text/javascript" src="assets/js/core/angular-1.4.8.min.js"></script>
+			<script type="text/javascript" src="assets/js/core/angular-ui-router.min.js"></script>
+			<script type="text/javascript" src="assets/js/core/angular-animate.min.js"></script>
+			<script type="text/javascript" src="assets/js/core/angular-route.min.js"></script>
+			<script type="text/javascript" src="assets/js/core/angular-cookies.min.js"></script>
+			<script type="text/javascript" src="assets/js/core/bootstrap.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/jquery.scrollLock.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/jquery.slimscroll.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+			<!--<script type="text/javascript" src="assets/js/plugins/select2/select2.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/datatables/dataTables.bootstrap.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/multiple-select/multiple-select.js"></script>-->
+			<script type="text/javascript" src="assets/js/plugins/angular-inform/angular-inform.min.js"></script>
+            <script type="text/javascript" src="assets/js/main.js"></script>
+
+			<!-- Load Angular Related Scripts -->
+			<script type="text/javascript" src="js/domeshield.js"></script>
+			<script type="text/javascript" src="js/controllers/login.controller.js"></script>
+			<script type="text/javascript" src="js/controllers/masterPage.controller.js"></script>
+            <!-- <script type="text/javascript" src="js/controllers/views/analyze.controller.js"></script>  -->
+            <script type="text/javascript" src="js/controllers/views/overview.controller.js"></script>
+			<script type="text/javascript" src="js/controllers/views/policy.controller.js"></script>
+			<script type="text/javascript" src="js/controllers/views/security.controller.js"></script>
+			<script type="text/javascript" src="js/controllers/views/category.controller.js"></script>
+			<script type="text/javascript" src="js/controllers/views/bwList.controller.js"></script>
+			<script type="text/javascript" src="js/controllers/views/network.controller.js"></script>
+			<script type="text/javascript" src="js/services/call-service.js"></script>
+			<script type="text/javascript" src="js/services/authentication-service.js"></script>
+			<script type="text/javascript" src="js/directives/generic-modal.js"></script>
+			<script type="text/javascript" src="js/directives/confirm-modal.js"></script>
+			<script type="text/javascript" src="js/directives/angularjs-multi-select.js"></script>
+
+	</head>
+	<body>
+		<div id="page-container" class="sidebar-l side-scroll" ng-controller="MasterPageController" ng-init="init()" ng-class="{'sidebar-o': state.includes('configure')}">
+			<!-- Header -->
+			 <header id="header-navbar">
+			     <!-- Header Navigation Right -->
+			     <ul class="nav-header pull-right">
+			         <li><p class="profile">Welcome <strong>{{username}}</strong></p></li>
+			         <li><a href="#" ng-controller="LoginController" ng-click="logout()"><i class="fa fa-sign-out"></i> Sign Out</a></li>
+			     </ul>
+			     <!-- END Header Navigation Right -->
+			     <div class="navbar-brand">
+			         <a href=""><img src="assets/img/logo-shield.jpg" /></a>
+			     </div>
+			     <!-- Header Navigation Left -->
+			     <ul class="nav-header pull-left">
+			         <!-- <li ui-sref-active="active" href="">
+			             <a ui-sref="analyze" href="">Analyze</a>
+			         </li> -->
+			         <li ui-sref-active="active" href="">
+			             <a ui-sref="overview" href="">Overview</a>
+			         </li>
+			         <li ng-class="state.includes('configure') ? 'active' : ''">
+			             <a ui-sref="configure.policy" href="">Configure</a>
+			         </li>			         
+			         <li ui-sref-active="active">
+			             <a ui-sref="setup" href="">Setup</a>
+			         </li>
+			     </ul>
+			     <!-- END Header Navigation Left -->
+			 </header>
+			 <!-- END Header -->
+			<div inform class="inform-animate inform-fixed inform-message" style="z-index:10000"></div>
+			<main id="main-container" ui-view class="ng-cloak">
+			</main>
+		</div>
+	</body>
+</html>

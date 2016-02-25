@@ -1,0 +1,79 @@
+<!-- Create Securiy Rule Modal -->
+ <div id="createCategoryRule" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+     <div class="modal-dialog">
+         <div class="modal-content">
+             <div class="block block-themed block-transparent remove-margin-b">
+                 <div class="block-header bg-primary-darker">
+                     <ul class="block-options">
+                         <li>
+                             <button name="button" type="button" data-dismiss="modal"> <i class="si si-close"></i></button>
+                         </li>
+                     </ul>
+                     <h3 class="block-title">{{action == 'add' ? 'Create' : 'Update'}} Category Rule</h3>
+                 </div>
+                 <div class="block-content">
+                 	<form name="settingsForm">
+
+						<div ng-show="action != 'add'" class="alert alert-sm alert-gray" role="alert" ng-class="displayWarning ? '' : 'hide'">
+						  <button type="button" class="close" ng-click="displayWarning = false;"><span aria-hidden="true">&times;</span></button>
+						  
+						  Once a rule is updated all related policy/policies will be updated 
+						</div>
+
+	                     <div class="block">
+	                         <ul class="nav nav-tabs nav-tabs-alt">
+	                             <li class="active">
+	                                 <a data-target="#categoryName"  data-toggle="tab" href="">Name</a>
+	                             </li>
+	                             <li>
+	                                  <a data-target="#categorySettings" ng-style="{'cursor' : ((selectedRule.name == '') || (settingsForm.pName.$invalid && !settingsForm.pName.$pristine) || (settingsForm.pRemark.$invalid && !settingsForm.pRemark.$pristine)) ? 'not-allowed' : 'pointer'}"  
+                                 		 data-toggle="{{(selectedRule.name == '') || (settingsForm.pName.$invalid && !settingsForm.pName.$pristine) || (settingsForm.pRemark.$invalid && !settingsForm.pRemark.$pristine) && '' || 'tab'}}">Settings</a>
+                             	 </li>
+	                         </ul>
+	                         <div class="block-content tab-content">
+	                             <div class="tab-pane active" id="categoryName">
+	                                 <div class="form-group" ng-class="{ 'has-error' : settingsForm.pName.$invalid && !settingsForm.pName.$pristine, 'has-success':settingsForm.pName.$valid }">
+	                                     <label for="pName">Name</label>
+	                                     <input type="text" autocomplete="off" class="form-control" id="pName" name="pName" placeholder="" ng-model="selectedRule.name" required ng-minlength='1' ng-maxlength="100" maxlength="100">
+                                 	 	 <p ng-show="settingsForm.pName.$invalid && !settingsForm.pName.$pristine" class="help-block">This field should be between 1-100 characters.</p>
+                                 
+	                                 </div>
+	                                 <div class="form-group" ng-class="{ 'has-error' : settingsForm.pRemark.$invalid && !settingsForm.pRemark.$pristine, 'has-success':settingsForm.pRemark.$valid }">
+	                                     <label for="pRemark">Remark</label>
+	                                     <textarea autocomplete="off" class="form-control noresize" id="pRemark" name="pRemark" placeholder="" ng-model="selectedRule.remark" ng-minlength="0" ng-maxlength="250" maxlength="250"></textarea>
+	                                     <p ng-show="settingsForm.pRemark.$invalid && !settingsForm.pRemark.$pristine" class="help-block">This field should be between 1-250 characters.</p>
+	                                 </div>
+	                                 <div class="form-group">
+	                                     <button ng-if="action == 'add' " type="button" class="btn btn-sm btn-success pull-right" id="nextButton"
+	                                     	data-toggle="tab" ng-disabled="(selectedRule.name == '') || (settingsForm.pName.$invalid && !settingsForm.pName.$pristine) || (settingsForm.pRemark.$invalid && !settingsForm.pRemark.$pristine)" 
+	                                     	ng-click="nextClick()">Next</button>
+	                                     	
+	                                     <button ng-if="action == 'update' " type="button" class="btn btn-sm btn-success pull-right"
+	                                     	ng-disabled="(settingsForm.pName.$invalid && !settingsForm.pName.$pristine) || (settingsForm.pRemark.$invalid && !settingsForm.pRemark.$pristine)" 
+	                                     	ng-click="saveRule()"> <i class="fa fa-refresh "></i> Update</button>
+	                                 </div>
+	                             </div>
+	                             <div class="tab-pane" id="categorySettings">
+	                                 <div class="form-group clearfix" ng-class="{ 'has-error' : selectedCategories.length == 0, 'has-success':selectedCategories.length != 0 }">
+				                    	 <label for="pRemark">Select Category</label>
+				                         <div class="multi-select-isteven" isteven-multi-select helper-elements="filter" max-labels="3" 
+				               						 input-model="categories" output-model="selectedCategories" 
+				               						 button-label="name" item-label="name" group-property="msGroup"
+				               						 tick-property="ticked">
+									 	 </div>
+									 	 <p ng-show="selectedCategories.length == 0" class="help-block">Please select at least one category.</p>	
+				                     </div>
+	                                 <div class="form-group">
+	                                     <button type="button" class="btn btn-sm btn-success pull-right" ng-click="saveRule()" ng-disabled="selectedCategories.length == 0"><i ng-class="action == 'add' ? 'fa fa-floppy-o' : 'fa fa-refresh' "></i> {{action == 'add' ? 'Create' : 'Update'}}</button>
+	                                 </div>
+	                             </div>
+	                         </div>
+	                     </div>
+                     </form>
+                     <div class="clearfix"></div>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </div>
+ <!-- End Create Securiy Rule Modal -->

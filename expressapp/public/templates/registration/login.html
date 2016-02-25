@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" ng-app="domeshield">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <title>Comodo cDome Shield</title>
+    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <script src="assets/js/core/modernizr-2.8.3.min.js"></script>
+    <link rel="shortcut icon" type="image/png" href="assets/img/favicons/favicon.ico" >
+    <script type="text/javascript" src="assets/js/core/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/bootstrap.min.js"></script>
+    <script charset="utf-8" src="assets/js/plugins.js"></script>
+    <script charset="utf-8" src="assets/js/main.js"></script>
+    <script type="text/javascript" src="assets/js/core/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/angular-1.4.8.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/angular-ui-router.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/angular-animate.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/angular-route.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/angular-cookies.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/bootstrap.min.js"></script>
+    <!--<script type="text/javascript" src="assets/js/plugins/select2/select2.js"></script>
+            <script type="text/javascript" src="assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
+            <script type="text/javascript" src="assets/js/plugins/datatables/dataTables.bootstrap.js"></script>
+            <script type="text/javascript" src="assets/js/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>-->
+    <script type="text/javascript" src="assets/js/plugins/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="assets/js/plugins/jquery.scrollLock.min.js"></script>
+    <script type="text/javascript" src="assets/js/plugins/angular-inform/angular-inform.min.js"></script>
+    <!-- Load Angular Related Scripts -->
+    <script type="text/javascript" src="js/domeshield.js"></script>
+    <script type="text/javascript" src="js/controllers/login.controller.js"></script>
+    <script type="text/javascript" src="js/services/call-service.js"></script>
+    <script type="text/javascript" src="js/services/authentication-service.js"></script>
+</head>
+
+<body id="home">
+    <div ng-controller="LoginController" ng-init="init()">
+        <!--[if lt IE 8]>
+                <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+            <![endif]-->
+        <div id="preloader">
+            <div id="status">&nbsp;</div>
+        </div>
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <div class="navbar-brand"></div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="wizard">
+                        <div class="leftText">
+                            <h1>Secure Browsing Off-Premise</h1>
+                            <h2>by DNS Forwarding</h2>
+                            <p>Easiest way to block Malicious and risky web access and apply company web browsing policy off-premise.Simple yet extremely effective DNS based security for your company. </p>
+                        </div>
+                        <!-- login block -->
+                        <div class="loginBlock">
+                            <div class="title">
+                                <h3>Login</h3>
+                            </div>
+                            <div class="blockContent">
+                                <form id="loginForm" role="form" ng-submit="login()">
+                                    <div class="alert alert-danger" ng-if="errorMessage.length != 0">
+                                        {{ errorMessage}}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="awssecret">Username:</label>
+                                        <input type="text" class="form-control" id="username" name="username" placeholder="" ng-model="username" autofocus>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="awssecret">Password:</label>
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="" ng-model="password">
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" ng-disabled="loginPreloaderFlag" class="btn btn-lg btn-danger btn-block" ><i ng-if="loginPreloaderFlag" class="fa fa-refresh fa-spin-left"></i> SIGN IN</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- END login block -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="homeFeatures">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="text-center">FEATURES</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="media">
+                            <div class="media-left">
+                                <img class="media-object" src="assets/img/features/traffic.png" width="70" alt="Easy Traffic Forwarding">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading">DNS Forwarding </h4>
+                                <p>Set your DNS Servers to Dome Shield in seconds and start your security on and off premise.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="media">
+                            <div class="media-left">
+                                <img class="media-object" src="assets/img/features/botnet.png" width="70" alt="Botnet, Fraud and XSS Protection">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading">Granular Policy Management</h4>
+                                <p>Add different locations and create granular policies. </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="media">
+                            <div class="media-left">
+                                <img class="media-object" src="assets/img/features/antivirus.png" width="70" alt="Gateway Antivirus &amp; Advanced Threat Protection">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading">Security Profiles </h4>
+                                <p>Block Malware, Phising, Botnet , Fraud and many more, updated daily. </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="media">
+                            <div class="media-left">
+                                <img class="media-object" src="assets/img/features/url-filter.png" width="70" alt="URL Filtering">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading">Category Profiles</h4>
+                                <p>Enforce company policy even off-premise using 70 different URL Categories and custom B/W Lists.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="media">
+                            <div class="media-left">
+                                <img class="media-object" src="assets/img/features/analysis.png" width="70" alt="Behavioral Analysis &amp; Sandboxing">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading">Advanced Reporting </h4>
+                                <p>Get full visibility of everything happening on your Dome Shield connected perimeter, create custom widgets. </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container">
+                &copy; Comodo Group, Inc. 2016. All rights reserved. All trademarks displayed on this web site are the exclusive property of the respective holders.
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>
