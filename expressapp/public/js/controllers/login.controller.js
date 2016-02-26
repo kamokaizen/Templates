@@ -20,9 +20,7 @@ angular.module('domeshield').controller('LoginController', function(Authenticati
 						$scope.errorMessage = data.message;
 						$scope.loginPreloaderFlag = false;
 					} else {
-						Authentication.setAuthenticatedAccount($scope.username);
-                        Authentication.setAnalyzeToken(data.analyzeToken);    
-                        Authentication.setDnsAddresses(data.dnsAddresses);    
+						Authentication.setAuthenticatedAccount($scope.username);  
 						window.location = data.redirect;
 					}
 				}

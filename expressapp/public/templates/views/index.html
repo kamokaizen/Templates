@@ -37,13 +37,7 @@
 			<script type="text/javascript" src="js/domeshield.js"></script>
 			<script type="text/javascript" src="js/controllers/login.controller.js"></script>
 			<script type="text/javascript" src="js/controllers/masterPage.controller.js"></script>
-            <!-- <script type="text/javascript" src="js/controllers/views/analyze.controller.js"></script>  -->
             <script type="text/javascript" src="js/controllers/views/overview.controller.js"></script>
-			<script type="text/javascript" src="js/controllers/views/policy.controller.js"></script>
-			<script type="text/javascript" src="js/controllers/views/security.controller.js"></script>
-			<script type="text/javascript" src="js/controllers/views/category.controller.js"></script>
-			<script type="text/javascript" src="js/controllers/views/bwList.controller.js"></script>
-			<script type="text/javascript" src="js/controllers/views/network.controller.js"></script>
 			<script type="text/javascript" src="js/services/call-service.js"></script>
 			<script type="text/javascript" src="js/services/authentication-service.js"></script>
 			<script type="text/javascript" src="js/directives/generic-modal.js"></script>
@@ -71,12 +65,6 @@
 			         </li> -->
 			         <li ui-sref-active="active" href="">
 			             <a ui-sref="overview" href="">Overview</a>
-			         </li>
-			         <li ng-class="state.includes('configure') ? 'active' : ''">
-			             <a ui-sref="configure.policy" href="">Configure</a>
-			         </li>			         
-			         <li ui-sref-active="active">
-			             <a ui-sref="setup" href="">Setup</a>
 			         </li>
 			     </ul>
 			     <!-- END Header Navigation Left -->

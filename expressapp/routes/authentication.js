@@ -1,4 +1,5 @@
 var express = require('express');
+var async = require("async");
 var path = require('path');
 var router = express.Router();
 var sessionWorker = require('../workers/session_worker');
@@ -11,14 +12,14 @@ function validateSession(cb, session) {
 }
 
 function redirectToLogin(res) {
-    var p = path.join(__dirname, '../public', '/login.html');
+    var p = path.join(__dirname, '../public/templates/registration', '/login.html');
     res.status(401).sendFile(p);
 }
 
 router.get('/login', function (req, res, next) {
     validateSession(function (isValid) {
         if (isValid) {
-            res.redirect("/home");
+            res.redirect("/overview");
         } else {
             console.log("Session is not valid, request is redirected to the login...");
             redirectToLogin(res);
@@ -29,7 +30,7 @@ router.get('/login', function (req, res, next) {
 router.post('/signin', function (req, res, next) {
     var username = req.body.username;
     var password = req.body.password;
-
+    
     try {
         dbWorker.getUser(function (status, rows) {
             if (status) {
@@ -37,7 +38,7 @@ router.post('/signin', function (req, res, next) {
                     var user = rows[0];
                     if (user.password == password) {
                         req.session.userData = sessionWorker.getNewSession(username, user.id);
-                        res.json({ result: true, redirect: "/home" });
+                        res.json({ result: true, redirect: "/overview" });
                         res.end();
                     }
                     else {
