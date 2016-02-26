@@ -31,7 +31,7 @@ angular.module('domeshield').controller('LoginController', function(Authenticati
 		Authentication.logout("/signout", {}, 
 				function (err, data) {
 					if(err) {
-						console.error('Cannot Logout');
+						console.error('Cannot Logout ' + err);
 					}
 					else {
 						Authentication.unauthenticate();

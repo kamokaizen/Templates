@@ -23,6 +23,7 @@
         "sinon": "latest",
         "mocha": "latest",
         "async": "latest",
-        "csurf": "latest"
+        "csurf": "latest",
+        "connect-redis":"latest"
     }
 }

@@ -30,7 +30,7 @@ router.get('/login', function (req, res, next) {
 router.post('/signin', function (req, res, next) {
     var username = req.body.username;
     var password = req.body.password;
-    
+
     try {
         dbWorker.getUser(function (status, rows) {
             if (status) {

@@ -7,5 +7,9 @@
         "port": 3306,
         "user": "root",
         "password": "root"
+    },
+    "redis": {
+        "host": "198.199.92.141", 
+        "port": "6379"
     }
 }
