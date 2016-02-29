@@ -4,6 +4,7 @@ var path = require('path');
 var router = express.Router();
 var sessionWorker = require('../workers/session_worker');
 var dbWorker = require('../workers/mysql_worker');
+var hashWorker = require('../workers/hash_worker');
 
 function validateSession(cb, session) {
     sessionWorker.validateSession(function (result) {
@@ -36,7 +37,7 @@ router.post('/signin', function (req, res, next) {
             if (status) {
                 if (rows && rows.length > 0) {
                     var user = rows[0];
-                    if (user.password == password) {
+                    if (hashWorker.checkPassword(user.password, password)) {
                         req.session.userData = sessionWorker.getNewSession(username, user.id);
                         res.json({ result: true, redirect: "/overview" });
                         res.end();

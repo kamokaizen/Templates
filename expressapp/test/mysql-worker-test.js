@@ -11,8 +11,7 @@ describe('User Crud Operations Test', function () {
     var expectedUser = {
         username: "testUser",
         uid: "850681",
-        customerId: "CUSTc85f8bf1a62d46548134564ceae1bcca",
-        msspToken: "e651775a005e49dcb67308c6051097e4",
+        password: "Password",
         role: 0
     };
 
@@ -42,7 +41,7 @@ describe('User Crud Operations Test', function () {
             if (status) console.log('testUser is inserted into db.');
             assert.equal(status, true);
             done();
-        }, expectedUser.username, expectedUser.uid, expectedUser.customerId, expectedUser.msspToken, 0);
+        }, expectedUser.username, expectedUser.uid, expectedUser.password, 0);
     });
 
     it('should get user', function (done) {

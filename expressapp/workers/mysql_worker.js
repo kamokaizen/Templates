@@ -1,5 +1,6 @@
 var mysql = require('mysql');
 var us = require('underscore');
+var hashWorker = require('../workers/hash_worker');
 
 var pool = mysql.createPool({
     connectionLimit: global.conf.mysql.connectionLimit,
@@ -61,8 +62,8 @@ function getConnection(cb, query, groupBy) {
     });
 }
 
-exports.insertUser = function (callbackFunc, username, uid, customerId, msspToken, role) {
-    var query = mysql.format("INSERT into users (uid,username,mssp_cid,mssp_ntoken,role,isdeleted) VALUES (?,?,?,?,?,0);", [uid, username, customerId, msspToken, role]);
+exports.insertUser = function (callbackFunc, username, uid, password, role) {
+    var query = mysql.format("INSERT into users (uid,username,password,role,isdeleted) VALUES (?,?,?,0,0);", [uid, username, hashWorker.createPassword(password), role]);
     getConnection(callbackFunc, query);
 }
 
@@ -70,11 +71,6 @@ exports.deleteUser = function (callbackFunc, username) {
     var query = mysql.format("DELETE FROM users WHERE username=?;", username);
     getConnection(callbackFunc, query);
 }
-
-exports.getUser = function (callbackFunc, username) {
-    var query = mysql.format("SELECT * FROM users WHERE isdeleted=0 AND username=?;", username);
-    getConnection(callbackFunc, query);
-};
 
 exports.getUser = function (callbackFunc, username) {
     var query = mysql.format("SELECT * FROM users WHERE isdeleted=0 AND username=?;", username);

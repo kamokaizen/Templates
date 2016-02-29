@@ -24,6 +24,7 @@
         "mocha": "latest",
         "async": "latest",
         "csurf": "latest",
-        "connect-redis":"latest"
+        "connect-redis":"latest",
+        "bcryptjs":"latest"
     }
 }
