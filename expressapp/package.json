@@ -1,9 +1,10 @@
 {
     "name": "expressapp",
+    "description": "Template nodejs project",
     "version": "0.0.1",
-    "private": true,
+    "main": "app.js",
     "scripts": {
-        "start": "node ./bin/www",
+        "start": "node app.js",
         "test": "mocha test"
     },
     "dependencies": {
@@ -24,7 +25,9 @@
         "mocha": "latest",
         "async": "latest",
         "csurf": "latest",
-        "connect-redis":"latest",
-        "bcryptjs":"latest"
+        "connect-redis": "latest",
+        "bcryptjs": "latest",
+        "log4js": "latest",
+        "nodemailer": "latest"
     }
 }

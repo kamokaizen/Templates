@@ -5,6 +5,8 @@ var router = express.Router();
 var sessionWorker = require('../workers/session_worker');
 var dbWorker = require('../workers/mysql_worker');
 var hashWorker = require('../workers/hash_worker');
+var log4js = require('log4js');
+var log = log4js.getLogger("authentication");
 
 function validateSession(cb, session) {
     sessionWorker.validateSession(function (result) {
@@ -22,7 +24,7 @@ router.get('/login', function (req, res, next) {
         if (isValid) {
             res.redirect("/overview");
         } else {
-            console.log("Session is not valid, request is redirected to the login...");
+            log.warn("Session is not valid, request is redirected to the login...");
             redirectToLogin(res);
         }
     }, req.session);
@@ -75,7 +77,7 @@ router.all('*', function (req, res, next) {
             if (isValid) {
                 next();
             } else {
-                console.log("Session is not valid, request is redirected to the login...");
+                log.warn("Session is not valid, request is redirected to the login...");
                 res.redirect("/login");
             }
         }, req.session);

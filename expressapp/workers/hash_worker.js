@@ -1,4 +1,6 @@
 var bcrypt = require('bcryptjs');
+var log4js = require('log4js');
+var log = log4js.getLogger("hash_worker");
 
 exports.createPassword = function (passwd) {
     // Creating hash and salt

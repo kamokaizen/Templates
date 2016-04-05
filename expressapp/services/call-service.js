@@ -1,6 +1,8 @@
 var https = require('https');
 var http = require('http');
 var querystring = require('querystring');
+var log4js = require('log4js');
+var log = log4js.getLogger("call-service");
 
 exports.requestToService = requestToService;
 
@@ -57,7 +59,7 @@ function requestToService(host, port, method, path, headers, data, isSecureCall,
     });
 
     apiReq.on('error', function(err) {
-        console.log(err)
+        log.error(err)
         callback(err, null);
     });
 

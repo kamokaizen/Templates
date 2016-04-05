@@ -1,6 +1,8 @@
 var mysql = require('mysql');
 var us = require('underscore');
 var hashWorker = require('../workers/hash_worker');
+var log4js = require('log4js');
+var log = log4js.getLogger("mysql_worker");
 
 var pool = mysql.createPool({
     connectionLimit: global.conf.mysql.connectionLimit,
@@ -16,25 +18,25 @@ var pool = mysql.createPool({
 function getConnection(cb, query, groupBy) {
     pool.getConnection(function (err, connection) {
         if (typeof connection === 'undefined') {
-            console.error("Error in connection database");
+            log.error("Error in connection database");
             cb(false, []);
             return;
         }
 
         if (err) {
             connection.release();
-            console.error("Error in connection database");
+            log.error("Error in connection database");
             cb(false, []);
         }
 
-        console.log('connected to db as id ' + connection.threadId);
+        log.info('connected to db as id ' + connection.threadId);
 
         var errorCallback = function (err) {
-            console.error("Error in connection database");
+            log.error("Error in connection database");
             try {
                 cb(false, []);
             } catch (error) {
-                console.error('callback error after connection lost in mysql connection : ' + error);
+                log.error('callback error after connection lost in mysql connection : ' + error);
             }
         };
 
@@ -55,7 +57,7 @@ function getConnection(cb, query, groupBy) {
 
                     cb(true, rows);
                 } else {
-                    console.log(err);
+                    log.error(err);
                     cb(false, []);
                 }
             });

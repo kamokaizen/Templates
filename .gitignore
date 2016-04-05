@@ -50,4 +50,5 @@ Temporary Items
 .project
 .settings/
 /expressapp/.vscode/
+/expressapp/log
 /expressapp/node_modules

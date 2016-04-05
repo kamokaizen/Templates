@@ -3,6 +3,8 @@ global.conf = require('../config/config.test.json');
 var assert = require('assert');
 var mysql = require('mysql');
 var sinon = require('sinon');
+var log4js = require('log4js');
+var log = log4js.getLogger("mysql-worker-test");
 
 var mysqlWorker = require('../workers/mysql_worker');
 
@@ -18,7 +20,7 @@ describe('User Crud Operations Test', function () {
     before(function (done) {
         // runs before all tests in this block
         mysqlWorker.deleteUser(function (status, rows) {
-            if (status) console.log('testUser is deleted from db before all tests run.');
+            if (status) log.info('testUser is deleted from db before all tests run.');
             done();
         }, expectedUser.username);
     });
@@ -38,7 +40,7 @@ describe('User Crud Operations Test', function () {
     // test cases
     it('should insert user', function (done) {
         mysqlWorker.insertUser(function (status, rows) {
-            if (status) console.log('testUser is inserted into db.');
+            if (status) log.info('testUser is inserted into db.');
             assert.equal(status, true);
             done();
         }, expectedUser.username, expectedUser.uid, expectedUser.password, 0);
@@ -46,7 +48,7 @@ describe('User Crud Operations Test', function () {
 
     it('should get user', function (done) {
         mysqlWorker.getUser(function (status, rows) {
-            if (status) console.log('testUser is retrieved from db.');
+            if (status) log.info('testUser is retrieved from db.');
             assert.equal(status, true);
             assert.equal(expectedUser.username, rows[0].username);
             done();
@@ -55,7 +57,7 @@ describe('User Crud Operations Test', function () {
 
     it('should delete user', function (done) {
         mysqlWorker.deleteUser(function (status, rows) {
-            if (status) console.log('testUser is deleted from db.');
+            if (status) log.info('testUser is deleted from db.');
             assert.equal(status, true);
             done();
         }, expectedUser.username);

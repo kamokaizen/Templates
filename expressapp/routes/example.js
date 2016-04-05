@@ -4,17 +4,19 @@ var async = require('async');
 var dbWorker = require('../workers/mysql_worker');
 var redis = require('redis');
 var redisClient = redis.createClient(global.conf.redis);
+var log4js = require('log4js');
+var log = log4js.getLogger("example");
 
 /* GET users listing. */
-router.get('/test', function (req, res, next) {
+router.get('/test', function(req, res, next) {
     res.send('respond with a resource');
 });
 
-router.get('/asyncExample', function (req, res, next) {
+router.get('/asyncExample', function(req, res, next) {
     async.waterfall([
         // First function, goes to db and get user..
-        function (callback) {
-            dbWorker.getUser(function (status, rows) {
+        function(callback) {
+            dbWorker.getUser(function(status, rows) {
                 if (status) {
                     if (rows && rows.length > 0) {
                         var user = rows[0];
@@ -30,11 +32,11 @@ router.get('/asyncExample', function (req, res, next) {
             }, "Default_user");
         },
         // Second function, add example string to result
-        function (data, callback) {
+        function(data, callback) {
             callback(null, "Second Waterfall method called: " + JSON.stringify(data));
         }],
         // Final function, send message to client.  
-        function (err, result) {
+        function(err, result) {
             if (err) {
                 res.status(500).send('Async waterfall response with error: ' + JSON.stringify(err));
                 res.end();
@@ -48,22 +50,26 @@ router.get('/asyncExample', function (req, res, next) {
 
 // GET KEY'S VALUE
 router.get('/redis/get/:key', function(req, response) {
-	redisClient.get(req.params.key, function (error, val) {
-		if (error !== null) console.log("error: " + error);
-		else {
-			response.send("The value for this key is " + val);
-		}
-	});
+    redisClient.get(req.params.key, function(error, val) {
+        if (error !== null) {
+            log.error("error: " + error);
+        }
+        else {
+            response.send("The value for this key is " + val);
+        }
+    });
 });
 
 //SET KEY'S VALUE
 router.get('/redis/set/:key/:value', function(req, response) {
-	redisClient.set(req.params.key, req.params.value, function (error, result) {
-		if (error !== null) console.log("error: " + error);
-		else {
-			response.send("The value for '"+req.params.key+"' is set to: " + req.params.value);
-		}
-	});
+    redisClient.set(req.params.key, req.params.value, function(error, result) {
+        if (error !== null) {
+            log.error("error: " + error);
+        }
+        else {
+            response.send("The value for '" + req.params.key + "' is set to: " + req.params.value);
+        }
+    });
 });
 
 module.exports = router;

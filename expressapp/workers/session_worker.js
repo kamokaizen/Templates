@@ -1,5 +1,7 @@
 var _ = require('underscore');
 var guid = require('guid');
+var log4js = require('log4js');
+var log = log4js.getLogger("session_worker");
 
 function getNewSession(uname, uid) {
     var now = new Date();
@@ -8,14 +10,14 @@ function getNewSession(uname, uid) {
         user_id: uid,
         login_timestamp: now.getTime()
     };
-    console.log("Session is created for user: " + userSession.username);
+    log.info("Session is created for user: " + userSession.username);
     return userSession;
 }
 
 function removeSession(session) {
     var username = session.userData.username;
     session.destroy(function(err) {
-        console.log("Session is deleted for user:  " + username);
+        log.info("Session is deleted for user:  " + username);
     });
 }
 
