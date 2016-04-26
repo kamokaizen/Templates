@@ -23,5 +23,10 @@
             "user": "username",
             "pass": "password"
         }
-    }
+    },
+    "queue": {
+        "concurrentProcessLength": 5,
+        "timeout": 100
+    },
+    "listenPort": 8070
 }

@@ -2,10 +2,17 @@ var express = require('express');
 var router = express.Router();
 var async = require('async');
 var dbWorker = require('../workers/mysql_worker');
-var redis = require('redis');
-var redisClient = redis.createClient(global.conf.redis);
+// var redis = require('redis');
+// var redisClient;
 var log4js = require('log4js');
 var log = log4js.getLogger("example");
+
+// try {
+//     redisClient = redis.createClient(global.conf.redis); //CREATE REDIS CLIENT    
+// }
+// catch (err) {
+//     log.error(err);
+// }
 
 /* GET users listing. */
 router.get('/test', function(req, res, next) {
@@ -48,28 +55,28 @@ router.get('/asyncExample', function(req, res, next) {
         });
 });
 
-// GET KEY'S VALUE
-router.get('/redis/get/:key', function(req, response) {
-    redisClient.get(req.params.key, function(error, val) {
-        if (error !== null) {
-            log.error("error: " + error);
-        }
-        else {
-            response.send("The value for this key is " + val);
-        }
-    });
-});
+// // GET KEY'S VALUE
+// router.get('/redis/get/:key', function(req, response) {
+//     redisClient.get(req.params.key, function(error, val) {
+//         if (error !== null) {
+//             log.error("error: " + error);
+//         }
+//         else {
+//             response.send("The value for this key is " + val);
+//         }
+//     });
+// });
 
-//SET KEY'S VALUE
-router.get('/redis/set/:key/:value', function(req, response) {
-    redisClient.set(req.params.key, req.params.value, function(error, result) {
-        if (error !== null) {
-            log.error("error: " + error);
-        }
-        else {
-            response.send("The value for '" + req.params.key + "' is set to: " + req.params.value);
-        }
-    });
-});
+// //SET KEY'S VALUE
+// router.get('/redis/set/:key/:value', function(req, response) {
+//     redisClient.set(req.params.key, req.params.value, function(error, result) {
+//         if (error !== null) {
+//             log.error("error: " + error);
+//         }
+//         else {
+//             response.send("The value for '" + req.params.key + "' is set to: " + req.params.value);
+//         }
+//     });
+// });
 
 module.exports = router;

@@ -1,3 +1,8 @@
+var logWorker = require('./workers/log_worker');
+// initialize the logger, first param is the logging path, second param is configuration file path of log4js
+logWorker.initializeLogger('./log', './config/log4js.json');
+var log = logWorker.getLogger('app');
+
 var express = require('express');
 var session = require('express-session');
 var path = require('path');
@@ -10,20 +15,7 @@ var async = require("async");
 var csrf = require('csurf');
 var redis = require('redis');
 var redisStore = require('connect-redis')(session);
-var log4js = require('log4js');
-log4js.configure('./config/log4js.json');
-var log = log4js.getLogger("app");
-
-/**
- * make a log directory, just in case it isn't there.
- */
-try {
-  fs.mkdirSync('./log');
-} catch (e) {
-  if (e.code != 'EEXIST') {
-    log.error("Could not set up log directory, error was: ", e);
-  }
-}
+var redisClient;
 
 if (process.env.APP_ENV) {
     global.conf = require('./config/config.' + process.env.APP_ENV + '.json');
@@ -33,7 +25,12 @@ if (process.env.APP_ENV) {
     log.info("Configuration is set for default.json");
 }
 
-var redisClient = redis.createClient(global.conf.redis); //CREATE REDIS CLIENT
+try {
+    redisClient = redis.createClient(global.conf.redis); //CREATE REDIS CLIENT    
+}
+catch (err) {
+    log.error(err);
+}
 
 redisClient.on('connect', function () {
     log.info('Redis server connection is established.');
@@ -45,12 +42,14 @@ redisClient.on("error", function (err) {
 
 var authentication = require('./routes/authentication');
 var exampleRouter = require('./routes/example');
+var queueWorker = require('./workers/queue_worker');
+var scheduleWorker = require('./workers/schedule_worker');
 
 var app = express();
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(log4js.connectLogger(log4js.getLogger("http"), { level: 'auto' }));
+app.use(logWorker.getHttpLogger());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -76,8 +75,18 @@ app.get('*', function (req, res) {
     res.sendFile(p);
 });
 
-app.listen(8070);
-log.info("Server is listening on port 8070");
+app.listen(global.conf.listenPort);
+log.info("Server is listening on port " + global.conf.listenPort);
 log.info("Server started at " + new Date());
+
+// start queue with empty jobs
+queueWorker.startQueue(null, function (status, error) {
+    if (!status) { log.error("Error:" + error); }
+});
+
+// This job works at every 55 th minutes of hour
+var job = scheduleWorker.createHourlyScheduledJob(55, function () {
+    console.log('Hourly Task is run');
+});
 
 module.exports = app;

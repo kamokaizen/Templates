@@ -28,6 +28,9 @@
         "connect-redis": "latest",
         "bcryptjs": "latest",
         "log4js": "latest",
-        "nodemailer": "latest"
+        "nodemailer": "latest",
+        "hashmap": "latest",
+        "queue" : "latest",
+        "node-schedule": "latest"
     }
 }
