@@ -1,0 +1,109 @@
+.highlight {
+	background-color:#000000;
+	-moz-border-radius: 10px;
+	border-radius: 10px;}
+.menuButtonListViewCss li a:hover {
+	background-color:gray; 
+	color:#FFF;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+}
+
+.menuButtonImage {
+	padding:15px;
+}
+
+.menuButtonText {
+	padding-top:30px; 
+	font-weight:bold; 
+	font-size:18px;
+}
+
+.ui-page .ui-content .ui-listview .ui-li-desc {
+    white-space : normal;
+}​
+
+.applicationTitleText {
+	font-weight:bold !important; 
+	font-size:28px !important;
+	font-weight:bold; 
+	text-align:center !important;
+	vertical-align:middle !important;
+}
+
+.absButton {
+	background-repeat: no-repeat;
+	background-position: 10% 50%;
+	height: 65px;
+	width: 60%;
+	margin:0 auto;
+	text-align:right !important;
+	vertical-align:middle !important;
+	position: relative;
+}
+
+.logoutButton {
+	background-image: url("../images/logout_bg.png");
+	background-color:#555555;
+	text-color:#000000;
+	background-repeat: no-repeat;
+	background-position: 10% 50%; 
+	height: 50px;
+	width: 100%;
+	padding-top:15px;
+	text-align:center;
+	font-size:18px;
+}
+
+.logoutButton:hover {background-color:gray; color:#FFF;}
+
+.loginButton {
+	background-repeat: no-repeat;
+	background-image: url("../images/login_arrow.png");
+	background-position: 50% 50%;
+	height: 50px;
+	width: 100%;
+	margin:0 auto;
+	text-align:right !important;
+	vertical-align:middle !important;
+	horizontal-align:right !important;
+	position: relative;
+}
+
+.mybutton {
+	background-image: url("../images/home_bg.png");
+}
+
+.mybutton2 {
+	background-image: url("../images/find_my_device_bg.png");
+}
+
+.mybutton3 {
+	background-image: url("../images/backup_restore.png");
+}
+
+.mybutton4 {
+	background-image: url("../images/logs_bg.png");
+}
+
+.mybutton5 {
+	background-image: url("../images/account_settings_bg.png");
+}
+
+.mybutton6 {
+	background-image: url("../images/help_bg.png");
+}
+
+.popup-header {
+border: 1px solid #aaaaaa; 
+background: #000000 url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x;
+color: #ffffff;
+text-align:center;
+font-weight: bold; 
+-moz-border-radius-topleft:.6em;
+-webkit-border-top-left-radius:.6em;
+border-top-left-radius:.6em;
+-moz-border-radius-topright:.6em;
+-webkit-border-top-right-radius:.6em;
+border-top-right-radius:.6em
+}

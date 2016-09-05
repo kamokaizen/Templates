@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:/datasource/database.properties</value>
+				<value>classpath:/mail/conf/mail.properties</value>
+				<value>classpath:/mail/conf/mail_facebook.properties</value>
+				<value>classpath:/mail/conf/mail_gmail.properties</value>
+				<value>classpath:/mail/conf/mail_hotmail.properties</value>
+				<value>classpath:/mail/conf/mail_yahoo.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Old data source
+	NOTE: This class is not an actual connection pool; it does not actually pool Connections. 
+	It just serves as simple replacement for a full-blown connection pool, 
+	implementing the same standard interface, but creating new Connections on every call.  	
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean> -->
+	
+	<!-- DataSource -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+        destroy-method="close">
+        <property name="driverClass" value="${jdbc.driver}" />
+        <property name="jdbcUrl" value="${jdbc.url}" />
+        <property name="user" value="${jdbc.user}" />
+        <property name="password" value="${jdbc.password}" />
+
+        <property name="acquireIncrement" value="${connection.acquireIncrement}" />
+        <property name="initialPoolSize" value="${connection.initialPoolSize}" />
+        <property name="minPoolSize" value="${connection.minPoolSize}" />
+        <property name="maxPoolSize" value="${connection.maxPoolSize}" />
+        <property name="maxIdleTime" value="${connection.maxIdleTime}" />
+        <property name="maxStatements" value="${connection.maxStatements}" />
+        <property name="checkoutTimeout" value="${connection.checkoutTimeout}" />
+        <property name="idleConnectionTestPeriod" value="${connection.idleConnectionTestPeriod}"/>
+    </bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+			    <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+				<prop key="hibernate.jdbc.batch_size">${hibernate.jdbc.batch_size}</prop>
+				<prop key="hibernate.search.default.directory_provider">${hibernate.search.default.directory_provider}</prop>
+				<prop key="hibernate.search.default.indexBase">${hibernate.search.default.indexBase}</prop>
+			</props>
+		</property>
+		<property name="packagesToScan" value="com.example.springwebtemplate.dbo" />
+	</bean>
+	
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="userDaoImpl" class="com.example.springwebtemplate.dao.impl.UserDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+</beans>

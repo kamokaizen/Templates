@@ -1,0 +1,75 @@
+<!-- We're using a style block to make it easy to view the custom styles -->
+	<!-- In production, these should be added to a custom.css file loaded in the head -->
+	<style>
+	/* Basic styles */
+	.threeLayoutGrid div {
+        text-align:left;
+        border-color:#ddd;
+		margin-bottom:1em;
+	}
+      .threeLayoutGrid p {
+        color:#777;
+        line-height:140%
+	}
+
+	/* Stack all blocks to start */
+	.threeLayoutGrid .ui-block-a, 
+	.threeLayoutGrid .ui-block-b, 
+	.threeLayoutGrid .ui-block-c { 
+		width: 100%; 
+		float:none; 
+	}
+
+    /* 1st breakpoint - Float B and C, leave A full width on top */ 
+	@media all and (min-width: 34em){
+        .threeLayoutGrid div {
+           min-height:12em;
+        }
+		.threeLayoutGrid .ui-block-b, 
+		.threeLayoutGrid .ui-block-c { 
+		  float:left; 
+          width: 49.95%; 
+		}
+        .threeLayoutGrid .ui-block-b p, 
+		.threeLayoutGrid .ui-block-c p { 
+          font-size:.8em;
+
+		}
+	}
+
+    /* 2nd breakpoint - Float all, 50/25/25 */ 
+	@media all and (min-width: 46em){
+
+        .threeLayoutGrid div {
+           min-height:17em;
+        }
+        .threeLayoutGrid .ui-block-a, 
+		.threeLayoutGrid .ui-block-c { 
+		  float:left; 
+          width: 49.95%; 
+		}
+		.threeLayoutGrid .ui-block-b, 
+		.threeLayoutGrid .ui-block-c { 
+		  float:left; 
+          width: 24.925%; 
+		}
+	}
+
+    /* 3rd breakpoint - Bump up font size at very wide screens */ 
+	@media all and (min-width: 66em){
+
+        .threeLayoutGrid {
+          font-size:125%;
+        }
+        .threeLayoutGrid .ui-block-a, 
+		.threeLayoutGrid .ui-block-c { 
+		  float:left; 
+          width: 49.95%; 
+		}
+		.threeLayoutGrid .ui-block-b, 
+		.threeLayoutGrid .ui-block-c { 
+		  float:left; 
+          width: 24.925%; 
+		}
+	}
+	</style>
