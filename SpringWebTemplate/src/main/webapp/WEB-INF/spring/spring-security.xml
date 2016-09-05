@@ -25,16 +25,10 @@
 		<intercept-url pattern="/test/**" access="hasRole('ROLE_ADMIN')"
 			requires-channel="http" />
 		<intercept-url pattern="/victim/**" access="hasRole('ROLE_ADMIN')"
-			requires-channel="http" />
-		<intercept-url pattern="/result/**" access="hasRole('ROLE_ADMIN')"
-			requires-channel="http" />
-		<intercept-url pattern="/mailoutcome/**" access="hasRole('ROLE_ADMIN')"
 			requires-channel="http" />	
 		<intercept-url pattern="/dashboard/**" access="hasRole('ROLE_ADMIN')"
 			requires-channel="http" />	
 		<intercept-url pattern="/cheat/**" access="hasRole('ROLE_ADMIN')"
-			requires-channel="http" />
-		<intercept-url pattern="/activity/**" access="hasRole('ROLE_ADMIN')"
 			requires-channel="http" />
 		<intercept-url pattern="/loginactivity/**" access="hasRole('ROLE_ADMIN')"
 			requires-channel="http" />				

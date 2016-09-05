@@ -48,8 +48,10 @@ Temporary Items
 .apdisk
 
 # project files
+.metadata
 .project
 .settings/
+Servers/
 /expressapp/.vscode/
 /expressapp/log
 /expressapp/node_modules
