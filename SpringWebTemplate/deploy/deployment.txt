@@ -1,0 +1,5 @@
+Local Deployment
+mvn install
+
+Production Deployment
+mvn install -Denvironment=prod
