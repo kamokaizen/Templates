@@ -11,84 +11,16 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
  
 	<property name="javaMailProperties">
 	   <props>
-	   		  <prop key="mail.transport.protocol">smtp</prop>
-       	      <prop key="mail.smtp.auth">true</prop>
-       	      <prop key="mail.smtp.starttls.enable">true</prop>
-       	      <prop key="mail.debug">true</prop>
-       	   </props>
-	</property>
-</bean>
-
-<bean id="mailSenderFacebook" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-	<property name="host" value="${mailfacebook.host}" />
-	<property name="port" value="${mailfacebook.port}" />
-	<property name="username" value="${mailfacebook.username}" />
-	<property name="password" value="${mailfacebook.password}" />
- 
-	<property name="javaMailProperties">
-	   <props>
-	   		  <prop key="mail.transport.protocol">smtp</prop>
-       	      <prop key="mail.smtp.auth">true</prop>
-       	      <prop key="mail.smtp.starttls.enable">true</prop>
-       	      <prop key="mail.debug">true</prop>
-       	   </props>
-	</property>
-</bean>
-
-<bean id="mailSenderGmail" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-	<property name="host" value="${mailgmail.host}" />
-	<property name="port" value="${mailgmail.port}" />
-	<property name="username" value="${mailgmail.username}" />
-	<property name="password" value="${mailgmail.password}" />
- 
-	<property name="javaMailProperties">
-	   <props>
-	   		  <prop key="mail.transport.protocol">smtp</prop>
-       	      <prop key="mail.smtp.auth">true</prop>
-       	      <prop key="mail.smtp.starttls.enable">true</prop>
-       	      <prop key="mail.debug">true</prop>
-       	   </props>
-	</property>
-</bean>
-
-<bean id="mailSenderHotmail" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-	<property name="host" value="${mailhotmail.host}" />
-	<property name="port" value="${mailhotmail.port}" />
-	<property name="username" value="${mailhotmail.username}" />
-	<property name="password" value="${mailhotmail.password}" />
- 
-	<property name="javaMailProperties">
-	   <props>
-	   		  <prop key="mail.transport.protocol">smtp</prop>
-       	      <prop key="mail.smtp.auth">true</prop>
-       	      <prop key="mail.smtp.starttls.enable">true</prop>
-       	      <prop key="mail.debug">true</prop>
-       	   </props>
-	</property>
-</bean>
-
-<bean id="mailSenderYahoo" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-	<property name="host" value="${mailyahoo.host}" />
-	<property name="port" value="${mailyahoo.port}" />
-	<property name="username" value="${mailyahoo.username}" />
-	<property name="password" value="${mailyahoo.password}" />
- 
-	<property name="javaMailProperties">
-	   <props>
-	   		  <prop key="mail.transport.protocol">smtp</prop>
-       	      <prop key="mail.smtp.auth">true</prop>
-       	      <prop key="mail.smtp.starttls.enable">true</prop>
-       	      <prop key="mail.debug">true</prop>
+	   		  <prop key="mail.transport.protocol">${mail.transport.protocol}</prop>
+       	      <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+       	      <prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
+       	      <prop key="mail.debug">${mail.debug}</prop>
        	   </props>
 	</property>
 </bean>
  
 <bean id="mailUtil" class="com.example.springwebtemplate.util.mail.MailUtil">
 	<property name="mailSender" ref="mailSender" />
-	<property name="mailSenderFacebook" ref="mailSenderFacebook" />
-	<property name="mailSenderGmail" ref="mailSenderGmail" />
-	<property name="mailSenderHotmail" ref="mailSenderHotmail" />
-	<property name="mailSenderYahoo" ref="mailSenderYahoo" />
 </bean>
  
 </beans>

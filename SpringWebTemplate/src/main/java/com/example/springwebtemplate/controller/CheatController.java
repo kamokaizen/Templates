@@ -42,7 +42,6 @@ import com.example.springwebtemplate.dbo.enums.AuthenticationTypeEnum;
 import com.example.springwebtemplate.dbo.enums.NotificationStateEnum;
 import com.example.springwebtemplate.dbo.enums.NotificationTypeEnum;
 import com.example.springwebtemplate.dbo.enums.OperatingSystemTypeEnum;
-import com.example.springwebtemplate.service.MailService;
 import com.example.springwebtemplate.service.NotificationService;
 import com.example.springwebtemplate.service.NotificationUserService;
 import com.example.springwebtemplate.util.ConstantKeys;
@@ -65,10 +64,7 @@ public class CheatController {
 	
 	@Autowired
 	NotificationService notificationService;
-	
-	@Autowired
-	private MailService mailService;
-	
+		
 	@Autowired
 	private VictimController victimController;
 	
@@ -124,7 +120,6 @@ public class CheatController {
         notification.setNotificationUser(user);
         notification.setEmailto(user.getEmail());
         notification.setNotificationAuthorizationId(RandomGUID.getInstance().generateRandomKey());
-        notification.prepareNotificationEmailContent();
         
         this.notificationService.saveNotification(notification);
         response.setStatus(true);
@@ -173,7 +168,6 @@ public class CheatController {
         notification.setNotificationLocation(notificationDto.getNotificationLocation());
         notification.setNotificationOs(OperatingSystemTypeEnum.getValue(notificationDto.getNotificationOs()));
         notification.setNotificationIp(notificationDto.getNotificationIp());
-        notification.prepareNotificationEmailContent();
         this.notificationService.saveNotification(notification);
         response.setStatus(true);
         return response;

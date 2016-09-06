@@ -12,10 +12,6 @@
 			<list>
 				<value>classpath:/datasource/database.properties</value>
 				<value>classpath:/mail/conf/mail.properties</value>
-				<value>classpath:/mail/conf/mail_facebook.properties</value>
-				<value>classpath:/mail/conf/mail_gmail.properties</value>
-				<value>classpath:/mail/conf/mail_hotmail.properties</value>
-				<value>classpath:/mail/conf/mail_yahoo.properties</value>
 			</list>
 		</property>
 	</bean>

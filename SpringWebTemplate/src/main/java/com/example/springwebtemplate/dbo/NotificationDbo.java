@@ -1,18 +1,8 @@
 package com.example.springwebtemplate.dbo;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -25,7 +15,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -45,12 +34,7 @@ import com.example.springwebtemplate.dbo.enums.AuthenticationTypeEnum;
 import com.example.springwebtemplate.dbo.enums.NotificationStateEnum;
 import com.example.springwebtemplate.dbo.enums.NotificationTypeEnum;
 import com.example.springwebtemplate.dbo.enums.OperatingSystemTypeEnum;
-import com.example.springwebtemplate.util.ConstantKeys;
-import com.example.springwebtemplate.util.SpringPropertiesUtil;
-import com.example.springwebtemplate.util.StreamUtil;
-import com.example.springwebtemplate.util.mail.MailAttachmentUnit;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 @Entity
 @Indexed
@@ -72,16 +56,6 @@ public class NotificationDbo extends MappedDomainObjectBase {
 
 	@Column(name = "email_subject")
 	private String emailSubject;
-
-	@Lob
-	@Column(name = "email_content", length = 100000)
-	private byte[] emailContent;
-
-	@Column(name = "email_attachments", length = 100000)
-	private String emailAttachments;
-
-	@Transient
-	private List<MailAttachmentUnit> mailAttachmentUnits;
 
 	@Transient
 	private Gson gson = new Gson();
@@ -135,7 +109,6 @@ public class NotificationDbo extends MappedDomainObjectBase {
 			this.setNotificationIp(notificationDto.getNotificationIp());
 			this.setNotificationType(NotificationTypeEnum.getValue(notificationDto.getNotificationType()));
 			this.setNotificationAction(AuthenticationTypeEnum.getValue(notificationDto.getNotificationAction()));
-			setDefaultFromEmail();
 		}
 	}
 
@@ -185,14 +158,6 @@ public class NotificationDbo extends MappedDomainObjectBase {
 
 	public void setNotificationId(long notificationId) {
 		this.notificationId = notificationId;
-	}
-
-	public byte[] getEmailContent() {
-		return emailContent;
-	}
-
-	public void setEmailContent(byte[] emailContent) {
-		this.emailContent = emailContent;
 	}
 
 	public Date getNotificationDate() {
@@ -251,27 +216,6 @@ public class NotificationDbo extends MappedDomainObjectBase {
 		this.notificationState = notificationState;
 	}
 
-	public String getEmailAttachments() {
-		return emailAttachments;
-	}
-
-	public void setEmailAttachments(String emailAttachments) {
-		this.emailAttachments = emailAttachments;
-	}
-
-	public List<MailAttachmentUnit> getMailAttachmentUnits() {
-		if (this.getEmailAttachments() != null && this.getEmailAttachments().length() > 0) {
-			Type listOfMailAttachmentObject = new TypeToken<List<MailAttachmentUnit>>() {
-			}.getType();
-			this.mailAttachmentUnits = gson.fromJson(this.getEmailAttachments(), listOfMailAttachmentObject);
-		}
-		return mailAttachmentUnits;
-	}
-
-	public void setMailAttachmentUnits(List<MailAttachmentUnit> mailAttachmentUnits) {
-		this.mailAttachmentUnits = mailAttachmentUnits;
-	}
-
 	public String getNotificationDateString() {
 		Date notificationDate = this.getNotificationDate();
 		if (notificationDate != null) {
@@ -285,14 +229,6 @@ public class NotificationDbo extends MappedDomainObjectBase {
 			}
 		}
 		return null;
-	}
-
-	private int getCurrentYear(){
-		Date date = new Date();
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(date);
-		int year = calendar.get(Calendar.YEAR);
-		return year;
 	}
 	
 	public void setNotificationDateString(String notificationDateString) {
@@ -313,172 +249,5 @@ public class NotificationDbo extends MappedDomainObjectBase {
 			return notificationId == ((NotificationDbo) obj).getNotificationId();
 		}
 		return super.equals(obj);
-	}
-
-	private void setDefaultFromEmail() {
-		switch (this.notificationType) {
-		case FACEBOOK:
-			this.setEmailfrom(SpringPropertiesUtil.getProperty("defaultFromEmailAddress"));
-			break;
-		case GMAIL:
-			this.setEmailfrom(SpringPropertiesUtil.getProperty("defaultGmailFromEmailAddress"));
-			break;
-		case HOTMAIL:
-			this.setEmailfrom(SpringPropertiesUtil.getProperty("defaultHotmailFromEmailAddress"));
-			break;
-		case YAHOO:
-			this.setEmailfrom(SpringPropertiesUtil.getProperty("defaultYahooFromEmailAddress"));
-			break;
-		default:
-			this.setEmailfrom(SpringPropertiesUtil.getProperty("defaultFromEmailAddress"));
-			break;
-		}
-	}
-
-	public void prepareNotificationEmailContent() throws UnsupportedEncodingException {
-
-		try {
-			switch (this.getNotificationType()) {
-			case FACEBOOK:
-				this.setEmailContent(prepareEmailForEacebook());
-				break;
-			case GMAIL:
-				this.setEmailContent(prepareAttachmentEmail(ConstantKeys.templateNotificationGmail,
-						new MailAttachmentUnit("google.png", ConstantKeys.logoGoogle)));
-				break;
-			case HOTMAIL:
-				this.setEmailContent(prepareAttachmentEmail(ConstantKeys.templateNotificationHotmail,
-						new MailAttachmentUnit("outlook.png", ConstantKeys.logoHotmail)));
-				break;
-			case YAHOO:
-				this.setEmailContent(prepareAttachmentEmail(ConstantKeys.templateNotificationYahoo,
-						new MailAttachmentUnit("yahoo.png", ConstantKeys.logoYahoo)));
-				break;
-			default:
-				break;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private byte[] prepareAttachmentEmail(String template, MailAttachmentUnit logoUnit) {
-		try {
-			InputStream stream = StreamUtil.getStream(template);
-			DataInputStream in = new DataInputStream(stream);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-
-			List<MailAttachmentUnit> attachments = new ArrayList<MailAttachmentUnit>();
-			MailAttachmentUnit userUnit = new MailAttachmentUnit("user.png");
-			attachments.add(logoUnit);
-			attachments.add(userUnit);
-			
-			MailAttachmentUnit googleLockUnit = null;
-			MailAttachmentUnit googleSeperatorUnit = null;
-			MailAttachmentUnit googleDeviceUnit = null;
-			
-			// These attachments only for gmail type
-			if(this.getNotificationType().getValue() == NotificationTypeEnum.GMAIL.getValue()){
-				googleLockUnit = new MailAttachmentUnit("googleLock.png", ConstantKeys.googleLock);
-				googleSeperatorUnit = new MailAttachmentUnit("googleSeperator.png", ConstantKeys.googleSeperator);
-				googleDeviceUnit = null;
-				
-				switch (notificationOs) {
-					case IOS:
-						googleDeviceUnit = new MailAttachmentUnit("googleDeviceApple.png", ConstantKeys.googleDeviceApple);
-						break;
-					case ANDROID:
-						googleDeviceUnit = new MailAttachmentUnit("googleDeviceAndroid.png", ConstantKeys.googleDeviceAndroid);
-						break;
-					case WINDOWS:
-						googleDeviceUnit = new MailAttachmentUnit("googleDeviceWindows.png", ConstantKeys.googleDeviceWindows);
-						break;
-					case MAC:
-						googleDeviceUnit = new MailAttachmentUnit("googleDeviceMac.png", ConstantKeys.googleDeviceMac);
-						break;
-					case LINUX:
-						googleDeviceUnit = new MailAttachmentUnit("googleDeviceWindows.png", ConstantKeys.googleDeviceWindows);
-						break;
-					default:
-						googleDeviceUnit = new MailAttachmentUnit("googleDeviceWindows.png", ConstantKeys.googleDeviceWindows);
-						break;
-				}
-				attachments.add(googleLockUnit);
-				attachments.add(googleSeperatorUnit);
-				attachments.add(googleDeviceUnit);
-			}
-
-			this.setMailAttachmentUnits(attachments);
-			Type listOfMailAttachmentObject = new TypeToken<List<MailAttachmentUnit>>() {
-			}.getType();
-			this.setEmailAttachments(gson.toJson(attachments, listOfMailAttachmentObject));
-
-			String strLine;
-			StringBuffer strBuffer = new StringBuffer();
-			NotificationUserDbo notificationUser = this.getNotificationUser();
-			String serverName = SpringPropertiesUtil.getProperty("applicationServerName");
-			String formattedDate = this.getNotificationDateString();
-
-			// Read File Line By Line
-			while ((strLine = br.readLine()) != null) {
-				strLine = strLine.replace("${logo}", logoUnit.getCid());
-				
-				// These replacements only made for GMAIL type
-				if(this.getNotificationType().getValue() == NotificationTypeEnum.GMAIL.getValue()){
-					strLine = strLine.replace("${googleLock}", googleLockUnit.getCid());
-					strLine = strLine.replace("${googleSeperator}", googleSeperatorUnit.getCid());
-					strLine = strLine.replace("${googleDevice}", googleDeviceUnit.getCid());	
-				}
-				
-				strLine = strLine.replace("${userLogo}", userUnit.getCid());
-				strLine = strLine.replace("${user}", notificationUser.getName());
-				strLine = strLine.replace("${fullname}", notificationUser.getName() + " " + notificationUser.getSurname());
-				strLine = strLine.replace("${date}", formattedDate);
-				strLine = strLine.replace("${currentYear}", String.valueOf(this.getCurrentYear()));
-				strLine = strLine.replace("${location}", this.getNotificationLocation());
-				strLine = strLine.replace("${IP}", this.getNotificationIp());
-				strLine = strLine.replace("${operatingSystem}", this.getNotificationOs().getKey());
-				strLine = strLine.replace("${email}", notificationUser.getEmail());
-				strLine = strLine.replace("${auth}", this.getNotificationAuthorizationId());
-				strLine = strLine.replace("${applicationServerName}", serverName);
-				strBuffer.append(strLine);
-			}
-			in.close();
-			return strBuffer.toString().getBytes("UTF-8");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	private byte[] prepareEmailForEacebook() {
-		try {
-			InputStream stream = StreamUtil.getStream(ConstantKeys.templateNotificationFacebook);
-			DataInputStream in = new DataInputStream(stream);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-
-			String strLine;
-			StringBuffer strBuffer = new StringBuffer();
-			NotificationUserDbo notificationUser = this.getNotificationUser();
-			String serverName = SpringPropertiesUtil.getProperty("applicationServerName");
-			String formattedDate = this.getNotificationDateString();
-
-			// Read File Line By Line
-			while ((strLine = br.readLine()) != null) {
-				strLine = strLine.replace("${user}", notificationUser.getName());
-				strLine = strLine.replace("${date}", formattedDate);
-				strLine = strLine.replace("${location}", this.getNotificationLocation());
-				strLine = strLine.replace("${operatingSystem}", this.getNotificationOs().getKey());
-				strLine = strLine.replace("${email}", notificationUser.getEmail());
-				strLine = strLine.replace("${auth}", this.getNotificationAuthorizationId());
-				strLine = strLine.replace("${applicationServerName}", serverName);
-				strBuffer.append(strLine);
-			}
-			in.close();
-			return strBuffer.toString().getBytes("UTF-8");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 }

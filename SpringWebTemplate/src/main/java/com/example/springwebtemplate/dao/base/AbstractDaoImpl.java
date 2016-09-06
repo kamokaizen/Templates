@@ -79,9 +79,11 @@ public abstract class AbstractDaoImpl<E, I extends Serializable> implements Abst
 
 	@Override
 	public void delete(E e) {
-		MappedDomainObjectBase mappedDomainObjectBase = (MappedDomainObjectBase) e;
-		mappedDomainObjectBase.setDeleted(true);
-		getCurrentSession().saveOrUpdate(mappedDomainObjectBase);
+		if(e != null){
+			MappedDomainObjectBase mappedDomainObjectBase = (MappedDomainObjectBase) e;
+			mappedDomainObjectBase.setDeleted(true);
+			getCurrentSession().saveOrUpdate(mappedDomainObjectBase);	
+		}
 	}
 
 	public void bulkDelete(List<E> bulkList) {
