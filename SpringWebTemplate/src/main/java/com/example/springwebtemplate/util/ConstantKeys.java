@@ -9,12 +9,7 @@ public class ConstantKeys {
 	public static final String application_config = "/configuration.properties";
 	public static final String turkey_cities = "/turkiye_iller.txt";
 	public static final String geoliteCities = "/GeoLiteCity.dat";
-	
-	public static final String templateNotificationFacebook = "/mail/template/templateNotificationFacebook.html";
-	public static final String templateNotificationGmail = "/mail/template/templateNotificationGmail.html";
-	public static final String templateNotificationHotmail = "/mail/template/templateNotificationHotmail.html";
-	public static final String templateNotificationYahoo = "/mail/template/templateNotificationYahoo.html";
-	
+		
 	public static final String facebook = "/image/facebook.png";
 	public static final String gmail = "/image/gmail.png";
 	public static final String hotmail = "/image/hotmail.png";

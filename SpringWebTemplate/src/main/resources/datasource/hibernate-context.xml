@@ -11,22 +11,10 @@
 		<property name="locations">
 			<list>
 				<value>classpath:/datasource/database.properties</value>
-				<value>classpath:/mail/conf/mail.properties</value>
+				<value>classpath:/mail/mail.properties</value>
 			</list>
 		</property>
 	</bean>
-
-	<!-- Old data source
-	NOTE: This class is not an actual connection pool; it does not actually pool Connections. 
-	It just serves as simple replacement for a full-blown connection pool, 
-	implementing the same standard interface, but creating new Connections on every call.  	
-	<bean id="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="${jdbc.driver}" />
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.user}" />
-		<property name="password" value="${jdbc.password}" />
-	</bean> -->
 	
 	<!-- DataSource -->
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
