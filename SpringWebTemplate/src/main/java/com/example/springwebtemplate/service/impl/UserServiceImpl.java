@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.springwebtemplate.controller.response.UserWebModel;
+import com.example.springwebtemplate.controller.response.UserDto;
 import com.example.springwebtemplate.dao.AbstractDao;
 import com.example.springwebtemplate.dao.UserDao;
 import com.example.springwebtemplate.dbo.UserDbo;
@@ -88,19 +88,18 @@ public class UserServiceImpl extends AbstractServiceImpl<UserDbo, Long> implemen
 	}
 
 	@Override
-	public boolean updateUser(UserWebModel staffWebModel) {
-		UserDbo user = findById(Long.parseLong(staffWebModel.getStaffId()));
+	public boolean updateUser(UserDto userDto) {
+		UserDbo user = findById(userDto.getUserId());
 		if (user != null) {
-			if (staffWebModel.getCityId() != null)
-				user.setCity(cityService.findCity(Long.parseLong(staffWebModel
-						.getCityId())));
+			if (userDto.getCity() != 0)
+				user.setCity(cityService.findCity(userDto.getCity()));
 
-			if (staffWebModel.getName() != null)
-				user.setName(staffWebModel.getName());
-			if (staffWebModel.getSurname() != null)
-				user.setSurname(staffWebModel.getSurname());
-			if (staffWebModel.getUsername() != null)
-				user.setUsername(staffWebModel.getUsername());
+			if (userDto.getName() != null)
+				user.setName(userDto.getName());
+			if (userDto.getSurname() != null)
+				user.setSurname(userDto.getSurname());
+			if (userDto.getUsername() != null)
+				user.setUsername(userDto.getUsername());
 			saveUser(user);
 			return true;
 		} else

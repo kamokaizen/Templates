@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.springwebtemplate.controller.response.EnumTypeModel;
+import com.example.springwebtemplate.controller.response.EnumTypeDto;
 import com.example.springwebtemplate.dbo.enums.AuthenticationTypeEnum;
-import com.example.springwebtemplate.dbo.enums.LoginTypeEnum;
 import com.example.springwebtemplate.dbo.enums.NotificationStateEnum;
 import com.example.springwebtemplate.dbo.enums.UserRoleEnum;
 
@@ -27,12 +26,12 @@ public class TypeController {
 		
 	@RequestMapping(value = "/role", method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<EnumTypeModel> getRoleTypes() {
-		ArrayList<EnumTypeModel> response = new ArrayList<EnumTypeModel>();
+	public ArrayList<EnumTypeDto> getRoleTypes() {
+		ArrayList<EnumTypeDto> response = new ArrayList<EnumTypeDto>();
 		try{
 			UserRoleEnum[] values = UserRoleEnum.values();
 			for(UserRoleEnum type : values){
-				response.add(new EnumTypeModel(type));
+				response.add(new EnumTypeDto(type));
 			}
 			return response;
 		}
@@ -45,12 +44,12 @@ public class TypeController {
 	
 	@RequestMapping(value = "/authentication", method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<EnumTypeModel> getAuthenticationTypes() {
-		ArrayList<EnumTypeModel> response = new ArrayList<EnumTypeModel>();
+	public ArrayList<EnumTypeDto> getAuthenticationTypes() {
+		ArrayList<EnumTypeDto> response = new ArrayList<EnumTypeDto>();
 		try{
 			AuthenticationTypeEnum[] values = AuthenticationTypeEnum.values();
 			for(AuthenticationTypeEnum type : values){
-				response.add(new EnumTypeModel(type));
+				response.add(new EnumTypeDto(type));
 			}
 			return response;
 		}
@@ -60,33 +59,15 @@ public class TypeController {
 			return response;
 		}
 	}
-	
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	@ResponseBody
-	public ArrayList<EnumTypeModel> getLoginTypes() {
-		ArrayList<EnumTypeModel> response = new ArrayList<EnumTypeModel>();
-		try{
-			LoginTypeEnum[] values = LoginTypeEnum.values();
-			for(LoginTypeEnum type : values){
-				response.add(new EnumTypeModel(type));
-			}
-			return response;
-		}
-		catch(Exception ex){
-			ex.printStackTrace();
-			log.error("Error occured: " + ex.getLocalizedMessage());
-			return response;
-		}
-	}
-	
+		
 	@RequestMapping(value = "/notification/state", method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<EnumTypeModel> getNotificationStates() {
-		ArrayList<EnumTypeModel> response = new ArrayList<EnumTypeModel>();
+	public ArrayList<EnumTypeDto> getNotificationStates() {
+		ArrayList<EnumTypeDto> response = new ArrayList<EnumTypeDto>();
 		try{
 			NotificationStateEnum[] values = NotificationStateEnum.values();
 			for(NotificationStateEnum type : values){
-				response.add(new EnumTypeModel(type));
+				response.add(new EnumTypeDto(type));
 			}
 			return response;
 		}

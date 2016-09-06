@@ -1,17 +1,18 @@
 package com.example.springwebtemplate.controller.response;
 
+import com.example.springwebtemplate.controller.response.base.BaseRestResponse;
 import com.example.springwebtemplate.dbo.enums.CommonEnumInterface;
 
-public class EnumTypeModel extends BaseRestModel {
+public class EnumTypeDto implements BaseRestResponse {
 	private int value;
 	private String name;
 	private String nameEn;
 
-	public EnumTypeModel() {
+	public EnumTypeDto() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public EnumTypeModel(CommonEnumInterface typeEnum) {
+	public EnumTypeDto(CommonEnumInterface typeEnum) {
 		this.value = typeEnum.getValue();
 		this.name = typeEnum.getKey();
 		this.nameEn = typeEnum.getKeyEn();
@@ -40,10 +41,4 @@ public class EnumTypeModel extends BaseRestModel {
 	public void setNameEn(String nameEn) {
 		this.nameEn = nameEn;
 	}
-
-	@Override
-	public int getResponseType() {
-		return ResponseTypeEnum.Enum.getValue();
-	}
-
 }

@@ -1,18 +1,19 @@
 package com.example.springwebtemplate.controller.response;
 
+import com.example.springwebtemplate.controller.response.base.BaseRestResponse;
 import com.example.springwebtemplate.dbo.CityDbo;
 
-public class CityModel extends BaseRestModel {
+public class CityDto implements BaseRestResponse {
 
 	protected long cityId;
 	private String name;
 	private String plate;
 	
-	public CityModel() {
+	public CityDto() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public CityModel(CityDbo city) {
+	public CityDto(CityDbo city) {
 		if(city != null){
 			this.cityId = city.getCityId();
 			this.name = city.getName();
@@ -42,10 +43,5 @@ public class CityModel extends BaseRestModel {
 
 	public void setPlate(String plate) {
 		this.plate = plate;
-	}
-
-	@Override
-	public int getResponseType() {
-		return ResponseTypeEnum.City.getValue();
 	}
 }

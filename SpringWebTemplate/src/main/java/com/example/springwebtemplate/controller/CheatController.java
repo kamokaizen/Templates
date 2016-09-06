@@ -28,13 +28,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.springwebtemplate.controller.response.BaseRestResponse;
-import com.example.springwebtemplate.controller.response.EnumTypeModel;
-import com.example.springwebtemplate.controller.response.ImageModel;
+import com.example.springwebtemplate.controller.response.EnumTypeDto;
+import com.example.springwebtemplate.controller.response.ImageDto;
 import com.example.springwebtemplate.controller.response.NotificationDto;
-import com.example.springwebtemplate.controller.response.PageModel;
-import com.example.springwebtemplate.controller.response.StatusModel;
-import com.example.springwebtemplate.controller.response.ValidationModel;
+import com.example.springwebtemplate.controller.response.PageDto;
+import com.example.springwebtemplate.controller.response.StatusDto;
+import com.example.springwebtemplate.controller.response.ValidationDto;
+import com.example.springwebtemplate.controller.response.base.BaseRestResponse;
 import com.example.springwebtemplate.controller.validator.NotificationValidator;
 import com.example.springwebtemplate.dbo.NotificationDbo;
 import com.example.springwebtemplate.dbo.NotificationUserDbo;
@@ -89,7 +89,7 @@ public class CheatController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public BaseRestResponse newNotification(NotificationDto notificationDto, Locale locale) throws UnsupportedEncodingException{
-		ValidationModel response = new ValidationModel();
+		ValidationDto response = new ValidationDto();
 		NotificationValidator validator = new NotificationValidator();
 		validator.setNotificationUserService(this.notificationUserService);
 		BindingResult result = new BeanPropertyBindingResult(notificationDto, "notificationDto");
@@ -129,7 +129,7 @@ public class CheatController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public BaseRestResponse updateNotification(NotificationDto notificationDto, Locale locale) throws UnsupportedEncodingException{
-		ValidationModel response = new ValidationModel();
+		ValidationDto response = new ValidationDto();
 		
 		NotificationDbo notification = this.notificationService.findNotificationById(notificationDto.getNotificationId());
 		
@@ -176,7 +176,7 @@ public class CheatController {
 	@RequestMapping(value = "/delete", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public BaseRestResponse deleteNotification(@RequestParam(value = "nid", defaultValue = "0") String notificationId){
-		StatusModel response = new StatusModel();
+		StatusDto response = new StatusDto();
 		try{
 			NotificationDbo notification = this.notificationService.findNotificationById(Long.parseLong(notificationId));
 			if(notification != null){
@@ -204,7 +204,7 @@ public class CheatController {
 	@ResponseBody
 	public BaseRestResponse getNotifications(@RequestParam(value = "uid", defaultValue = "0") String userId,
 											 @RequestParam(value = "pn", defaultValue = "1") String pageNumber) {
-		PageModel<NotificationDto> response = new PageModel<NotificationDto>();
+		PageDto<NotificationDto> response = new PageDto<NotificationDto>();
 		try {
 			Criterion criterion = null;
 			if(userId.compareTo("0") != 0){
@@ -238,24 +238,24 @@ public class CheatController {
 	@RequestMapping(value = "/image/type/get", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public BaseRestResponse getNotificationTypeImage(@RequestParam(value = "tid", defaultValue = "0") String typeId){
-		ImageModel model = new ImageModel();
+		ImageDto model = new ImageDto();
 		try{
 			model.setUserId(Integer.parseInt(typeId));
 			switch(NotificationTypeEnum.getValue(Integer.parseInt(typeId))){
 				case FACEBOOK:
-					model.setNotificationUserimageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.facebook))));
+					model.setImageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.facebook))));
 					break;
 				case GMAIL: 
-					model.setNotificationUserimageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.gmail))));
+					model.setImageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.gmail))));
 					break;
 				case HOTMAIL:
-					model.setNotificationUserimageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.hotmail))));
+					model.setImageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.hotmail))));
 					break;
 				case YAHOO:
-					model.setNotificationUserimageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.yahoo))));
+					model.setImageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.yahoo))));
 					break;
 				default:
-					model.setNotificationUserimageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.defaultMail))));
+					model.setImageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.defaultMail))));
 					break;
 			}
 		}
@@ -268,32 +268,32 @@ public class CheatController {
 	@RequestMapping(value = "/image/state/get", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public BaseRestResponse getStateImage(@RequestParam(value = "sid", defaultValue = "0") String stateId){
-		ImageModel model = new ImageModel();
+		ImageDto model = new ImageDto();
 		try{
 			switch (NotificationStateEnum.getValue(Integer.parseInt(stateId))) {
 			case IDLE:
 				model.setUserId(Integer.parseInt(stateId));
-				model.setNotificationUserimageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.notification_idle))));
+				model.setImageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.notification_idle))));
 				break;
 			case ACTIVE:
 				model.setUserId(Integer.parseInt(stateId));
-				model.setNotificationUserimageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.notification_active))));				
+				model.setImageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.notification_active))));				
 				break;
 			case PASSIVE:
 				model.setUserId(Integer.parseInt(stateId));
-				model.setNotificationUserimageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.notification_passive))));
+				model.setImageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.notification_passive))));
 				break;
 			case FAIL:
 				model.setUserId(Integer.parseInt(stateId));
-				model.setNotificationUserimageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.notification_fail))));
+				model.setImageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.notification_fail))));
 				break;
 			case SUCCESS:
 				model.setUserId(Integer.parseInt(stateId));
-				model.setNotificationUserimageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.notification_success))));
+				model.setImageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.notification_success))));
 				break;
 			default:
 				model.setUserId(Integer.parseInt(stateId));
-				model.setNotificationUserimageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.notification_idle))));
+				model.setImageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.notification_idle))));
 				break;
 			}
 		}
@@ -305,8 +305,8 @@ public class CheatController {
 	
 	@RequestMapping(value = "/state/get", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ArrayList<EnumTypeModel> getStates(){
-		ArrayList<EnumTypeModel> states = null;
+	public ArrayList<EnumTypeDto> getStates(){
+		ArrayList<EnumTypeDto> states = null;
 		try{
 			return this.typeController.getNotificationStates();
 		}
@@ -320,7 +320,7 @@ public class CheatController {
 	@ResponseBody
 	public BaseRestResponse changeNotificationState(@RequestParam(value = "nid", defaultValue = "0") String notificationId,
 															@RequestParam(value = "sid", defaultValue = "0") String stateId){
-		StatusModel response = new StatusModel();
+		StatusDto response = new StatusDto();
 		try{
 			NotificationDbo notification = this.notificationService.findNotificationById(Integer.parseInt(notificationId));
 			if(notification != null){
@@ -354,7 +354,7 @@ public class CheatController {
 	@ResponseBody
 	public BaseRestResponse searchNotifications(@RequestParam(value = "text", defaultValue = "") String searchText,
 			@RequestParam(value = "pn", defaultValue = "1") String pageNumber) {
-		PageModel<NotificationDto> response = new PageModel<NotificationDto>();
+		PageDto<NotificationDto> response = new PageDto<NotificationDto>();
 		try {
 			List<NotificationDbo> results = this.notificationService.searchNotifications(searchText, Integer.parseInt(pageNumber));
 			if(results != null){

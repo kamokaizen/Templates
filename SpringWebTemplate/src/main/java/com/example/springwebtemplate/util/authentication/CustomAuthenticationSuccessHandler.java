@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +31,8 @@ public class CustomAuthenticationSuccessHandler implements
 	
 	@Autowired
 	private UserService userService;
+	
+	private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticationSuccessHandler.class);
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
@@ -64,6 +68,8 @@ public class CustomAuthenticationSuccessHandler implements
 
 		// //we will redirect the user after successfully login
 		httpServletResponse.sendRedirect("home/default");
+		
+		logger.info("User [ " + authUser.getUsername() + " ] authentication succeeded!");
 	}
 
 }

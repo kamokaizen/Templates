@@ -1,4 +1,4 @@
-package com.example.springwebtemplate.controller.response;
+package com.example.springwebtemplate.controller.response.base;
 
 
 /**

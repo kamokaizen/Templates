@@ -20,11 +20,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.springwebtemplate.controller.response.BaseRestResponse;
-import com.example.springwebtemplate.controller.response.StatusModel;
+import com.example.springwebtemplate.controller.response.StatusDto;
 import com.example.springwebtemplate.controller.response.UserDto;
-import com.example.springwebtemplate.controller.response.UserSummaryModel;
-import com.example.springwebtemplate.controller.response.UserWebModel;
+import com.example.springwebtemplate.controller.response.base.BaseRestResponse;
 import com.example.springwebtemplate.controller.validator.UserValidator;
 import com.example.springwebtemplate.dbo.CityDbo;
 import com.example.springwebtemplate.dbo.UserDbo;
@@ -63,13 +61,13 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/all", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ArrayList<UserSummaryModel> getUserSummary(Locale locale) {
-		ArrayList<UserSummaryModel> response = new ArrayList<UserSummaryModel>();
+	public ArrayList<UserDto> getUserSummary(Locale locale) {
+		ArrayList<UserDto> response = new ArrayList<UserDto>();
 		try {
 			List<UserDbo> allUsers = userService.getAllUsers();
 			if (allUsers != null) {
 				for (UserDbo user : allUsers) {
-					response.add(new UserSummaryModel(user));
+					response.add(new UserDto(user));
 				}
 			}
 			return response;
@@ -85,23 +83,19 @@ public class UserController {
 	public BaseRestResponse getUserInfo(@RequestParam("uid") long userId,
 			Locale locale) {
 		try {
-			boolean validNumber = ESAPI.validator().isValidNumber(
-					"ESAPI Validation Secure Long", userId + "", 0,
-					Long.MAX_VALUE, true);
+			boolean validNumber = ESAPI.validator().isValidNumber("ESAPI Validation Secure Long", userId + "", 0,Long.MAX_VALUE, true);
 			if (validNumber) {
 				UserDbo user = userService.findById(userId);
 				if (user != null)
-					return new UserWebModel(user);
+					return new UserDto(user);
 				else
-					return new StatusModel(false, messageSource.getMessage(
-							"userNotFound", null, locale));
+					return new StatusDto(false, messageSource.getMessage("userNotFound", null, locale));
 			} else
-				return new StatusModel(false, messageSource.getMessage(
-						"invalidParameter", null, locale));
+				return new StatusDto(false, messageSource.getMessage("invalidParameter", null, locale));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			log.error("Error occured: " + ex.getLocalizedMessage());
-			return new StatusModel(false, messageSource.getMessage(
+			return new StatusDto(false, messageSource.getMessage(
 					"userGetError", null, locale)
 					+ " "
 					+ ex.getLocalizedMessage());
@@ -111,20 +105,18 @@ public class UserController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public BaseRestResponse updateUserAccount(
-			@RequestBody final UserWebModel userModel, Locale locale) {
+			@RequestBody final UserDto userModel, Locale locale) {
 
 		try {
 			boolean updated = userService.updateUser(userModel);
 			if (updated)
-				return new StatusModel(true, messageSource.getMessage(
-						"userUpdated", null, locale));
+				return new StatusDto(true, messageSource.getMessage("userUpdated", null, locale));
 			else
-				return new StatusModel(false, messageSource.getMessage(
-						"userNotFound", null, locale));
+				return new StatusDto(false, messageSource.getMessage("userNotFound", null, locale));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			log.error("Error occured: " + ex.getLocalizedMessage());
-			return new StatusModel(false, messageSource.getMessage(
+			return new StatusDto(false, messageSource.getMessage(
 					"userCannotUpdated", null, locale)
 					+ " "
 					+ ex.getLocalizedMessage());
@@ -167,7 +159,7 @@ public class UserController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public BaseRestResponse createUser(
-			@RequestBody final UserWebModel userModel, Locale locale) {
+			@RequestBody final UserDto userModel, Locale locale) {
 
 		StringBuffer error = new StringBuffer();
 		try {
@@ -201,25 +193,24 @@ public class UserController {
 						null, locale) + "\n");
 			}
 
-			if (Long.parseLong(userModel.getCityId()) != 0)
-				newUser.setCity(cityService.findCity(Long.parseLong(userModel
-						.getCityId())));
+			if (userModel.getCity() != 0)
+				newUser.setCity(cityService.findCity(userModel.getCity()));
 
 			if (error.length() > 0) {
-				return new StatusModel(false, error.toString());
+				return new StatusDto(false, error.toString());
 			} else {
 				userService.saveUser(newUser);
-				return new StatusModel(true, "Personel hesabı oluşturuldu.");
+				return new StatusDto(true, "Personel hesabı oluşturuldu.");
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			log.error("Error occured: " + ex.getLocalizedMessage());
 			if (ex instanceof org.hibernate.exception.ConstraintViolationException) {
-				return new StatusModel(
+				return new StatusDto(
 						false,
 						"Personel hesabı oluşturulamadı: Girilen kullanıcı ismi kullanımda, lütfen başka bir kullanıcı ismi belirleyiniz!");
 			}
-			return new StatusModel(false, "Personel hesabı oluşturulamadı: "
+			return new StatusDto(false, "Personel hesabı oluşturulamadı: "
 					+ error.toString());
 		}
 	}

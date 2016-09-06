@@ -1,8 +1,9 @@
 package com.example.springwebtemplate.controller.response;
 
+import com.example.springwebtemplate.controller.response.base.BaseRestResponse;
 import com.example.springwebtemplate.dbo.UserActivityDbo;
 
-public class UserActivityDto {
+public class UserActivityDto implements BaseRestResponse {
 
 	protected long userActivityId;
 	private String userActivityDate;

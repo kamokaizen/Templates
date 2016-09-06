@@ -1,15 +1,16 @@
 package com.example.springwebtemplate.controller.response;
 
+import com.example.springwebtemplate.controller.response.base.BaseRestResponse;
 
-public class StatusModel extends BaseRestModel {
+public class StatusDto implements BaseRestResponse {
 	private boolean status;
 	private String reason;
 
-	public StatusModel() {
+	public StatusDto() {
 
 	}
 
-	public StatusModel(boolean status, String reason) {
+	public StatusDto(boolean status, String reason) {
 		this.status = status;
 		this.reason = reason;
 	}
@@ -28,10 +29,5 @@ public class StatusModel extends BaseRestModel {
 
 	public void setReason(String reason) {
 		this.reason = reason;
-	}
-
-	@Override
-	public int getResponseType() {
-		return ResponseTypeEnum.Status.getValue();
 	}
 }

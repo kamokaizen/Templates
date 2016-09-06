@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.springwebtemplate.controller.response.BaseRestResponse;
-import com.example.springwebtemplate.controller.response.EnumTypeModel;
+import com.example.springwebtemplate.controller.response.EnumTypeDto;
 import com.example.springwebtemplate.controller.response.NotificationDto;
 import com.example.springwebtemplate.controller.response.NotificationUserDto;
+import com.example.springwebtemplate.controller.response.base.BaseRestResponse;
 import com.example.springwebtemplate.dbo.enums.OperatingSystemTypeEnum;
 import com.example.springwebtemplate.util.SpringPropertiesUtil;
 
@@ -131,7 +131,7 @@ public class HomeController {
 	
 	@RequestMapping(value = "/cheat/state/get", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ArrayList<EnumTypeModel> getStates(){
+	public ArrayList<EnumTypeDto> getStates(){
 		return cheatController.getStates();
 	}
 	

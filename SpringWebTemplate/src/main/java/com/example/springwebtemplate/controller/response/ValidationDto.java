@@ -3,11 +3,13 @@ package com.example.springwebtemplate.controller.response;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ValidationModel implements BaseRestResponse{
+import com.example.springwebtemplate.controller.response.base.BaseRestResponse;
+
+public class ValidationDto implements BaseRestResponse{
 	private boolean status;
 	private Map<String, String> errors = new LinkedHashMap<String, String>();
 	
-	public ValidationModel() {
+	public ValidationDto() {
 		// TODO Auto-generated constructor stub
 	}
 

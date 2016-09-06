@@ -284,7 +284,7 @@ function getImageForUser(userId, imageComponentId) {
 					dataType : 'json',
 					success : function(jsonData) {
 						pushImage(jsonData.userId,
-								jsonData.notificationUserimageBase64);
+								jsonData.imageBase64);
 						$('#' + imageComponentId)
 								.fadeOut(
 										200,
@@ -293,7 +293,7 @@ function getImageForUser(userId, imageComponentId) {
 													.attr(
 															'src',
 															'data:image/png;base64,'
-																	+ jsonData.notificationUserimageBase64);
+																	+ jsonData.imageBase64);
 										}).fadeIn(400);
 					},
 					error : function() {
@@ -591,9 +591,9 @@ function getTypeImageForUser(typeId, imageComponentId){
 			  data: '',
 			  dataType: 'json',
 			  success: function(jsonData) {
-				  pushTypeImage(jsonData.userId, jsonData.notificationUserimageBase64);
+				  pushTypeImage(jsonData.userId, jsonData.imageBase64);
 				  $('#'+ imageComponentId).fadeOut(200, function() {
-					  $('#'+ imageComponentId).attr('src', 'data:image/png;base64,'+ jsonData.notificationUserimageBase64);
+					  $('#'+ imageComponentId).attr('src', 'data:image/png;base64,'+ jsonData.imageBase64);
 			        }).fadeIn(400);
 			  },
 			  error: function() {

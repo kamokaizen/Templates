@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.springwebtemplate.controller.response.BaseRestResponse;
-import com.example.springwebtemplate.controller.response.ImageModel;
-import com.example.springwebtemplate.controller.response.PageModel;
-import com.example.springwebtemplate.controller.response.StatusModel;
+import com.example.springwebtemplate.controller.response.ImageDto;
+import com.example.springwebtemplate.controller.response.PageDto;
+import com.example.springwebtemplate.controller.response.StatusDto;
 import com.example.springwebtemplate.controller.response.UserActivityDto;
+import com.example.springwebtemplate.controller.response.base.BaseRestResponse;
 import com.example.springwebtemplate.dbo.UserActivityDbo;
 import com.example.springwebtemplate.dbo.enums.UserAuthenticationTypeEnum;
 import com.example.springwebtemplate.service.UserActivityService;
@@ -49,7 +49,7 @@ public class LoginActivityController {
 	@ResponseBody
 	public BaseRestResponse getUserActivities(@RequestParam(value = "uid", defaultValue = "0") String userId,
 											  @RequestParam(value = "pn", defaultValue = "1") String pageNumber) {
-		PageModel<UserActivityDto> response = new PageModel<UserActivityDto>();
+		PageDto<UserActivityDto> response = new PageDto<UserActivityDto>();
 		try {	
 			Criterion criterion = null;
 			if(userId.compareTo("0") != 0){
@@ -77,7 +77,7 @@ public class LoginActivityController {
 	@RequestMapping(value = "/delete", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public BaseRestResponse deleteActivity(@RequestParam(value = "aid", defaultValue = "0") String activityId){
-		StatusModel response = new StatusModel();
+		StatusDto response = new StatusDto();
 		try{
 			UserActivityDbo activity = this.userActivityService.findUserActivityById(Long.parseLong(activityId));
 			if(activity != null){				
@@ -98,21 +98,21 @@ public class LoginActivityController {
 	@RequestMapping(value = "/image/get", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public BaseRestResponse getTypeImage(@RequestParam(value = "tid", defaultValue = "0") String typeId){
-		ImageModel model = new ImageModel();
+		ImageDto model = new ImageDto();
 		try{
 			model.setUserId(Integer.parseInt(typeId));
 			switch(UserAuthenticationTypeEnum.getValue(Integer.parseInt(typeId))){
 				case LOG_IN:
-					model.setNotificationUserimageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.loginImage))));
+					model.setImageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.loginImage))));
 					break;
 				case LOG_IN_FAILED: 
-					model.setNotificationUserimageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.loginFailImage))));
+					model.setImageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.loginFailImage))));
 					break;
 				case LOG_OUT:
-					model.setNotificationUserimageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.logoutImage))));
+					model.setImageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.logoutImage))));
 					break;
 				default:
-					model.setNotificationUserimageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.loginImage))));
+					model.setImageBase64(Base64.encodeBase64String(IOUtils.toByteArray(StreamUtil.getStream(ConstantKeys.loginImage))));
 					break;
 			}
 		}

@@ -3,12 +3,14 @@ package com.example.springwebtemplate.controller.response;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PageModel<E> implements BaseRestResponse {
+import com.example.springwebtemplate.controller.response.base.BaseRestResponse;
+
+public class PageDto<E> implements BaseRestResponse {
 	private int page;
 	private int totalPage;
 	private List<E> pageResult;
 
-	public PageModel() {
+	public PageDto() {
 		pageResult = new ArrayList<E>();
 	}
 

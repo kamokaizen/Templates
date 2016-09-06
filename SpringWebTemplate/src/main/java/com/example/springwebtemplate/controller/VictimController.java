@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.springwebtemplate.controller.response.BaseRestResponse;
-import com.example.springwebtemplate.controller.response.ImageModel;
+import com.example.springwebtemplate.controller.response.ImageDto;
 import com.example.springwebtemplate.controller.response.NotificationDto;
 import com.example.springwebtemplate.controller.response.NotificationUserDto;
-import com.example.springwebtemplate.controller.response.PageModel;
-import com.example.springwebtemplate.controller.response.StatusModel;
-import com.example.springwebtemplate.controller.response.ValidationModel;
+import com.example.springwebtemplate.controller.response.PageDto;
+import com.example.springwebtemplate.controller.response.StatusDto;
+import com.example.springwebtemplate.controller.response.ValidationDto;
+import com.example.springwebtemplate.controller.response.base.BaseRestResponse;
 import com.example.springwebtemplate.controller.validator.NotificationUserValidator;
 import com.example.springwebtemplate.dbo.NotificationDbo;
 import com.example.springwebtemplate.dbo.NotificationUserDbo;
@@ -66,7 +66,7 @@ public class VictimController {
 	@ResponseBody
 	public BaseRestResponse createNotificationUser(NotificationUserDto notificationUserDto,
 			   							Locale locale){
-		ValidationModel response = new ValidationModel();
+		ValidationDto response = new ValidationDto();
 		NotificationUserValidator validator = new NotificationUserValidator();
 		validator.setNotificationUserService(this.notificationUserService);
 		BindingResult result = new BeanPropertyBindingResult(notificationUserDto, "notificationUserDto");
@@ -94,7 +94,7 @@ public class VictimController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public BaseRestResponse updateNotificationUser(NotificationUserDto notificationUserDto, Locale locale){
-		ValidationModel response = new ValidationModel();
+		ValidationDto response = new ValidationDto();
 		try{
 			if(notificationUserDto != null){
 				NotificationUserDbo user = this.notificationUserService.findNotificationUserById(notificationUserDto.getNotificationUserId());
@@ -130,7 +130,7 @@ public class VictimController {
 	@RequestMapping(value = "/delete", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public BaseRestResponse deleteNotificationUser(@RequestParam(value = "uid", defaultValue = "0") String userId){
-		StatusModel response = new StatusModel();
+		StatusDto response = new StatusDto();
 		try{
 			List<NotificationDbo> notifications = this.notificationService.findNotificationsByUserId(Long.parseLong(userId));
 			if(notifications != null && notifications.size() > 0){
@@ -152,7 +152,7 @@ public class VictimController {
 	@RequestMapping(value = "/get", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public BaseRestResponse getNotificationUsers(@RequestParam(value = "pn", defaultValue = "1") String pageNumber) {
-		PageModel<NotificationUserDto> response = new PageModel<NotificationUserDto>();
+		PageDto<NotificationUserDto> response = new PageDto<NotificationUserDto>();
 		try {
 			int totalPageNumber = this.notificationUserService.getPageNumber(null);
 			List<NotificationUserDbo> allUsers = this.notificationUserService.getPageResult(null, Order.desc("storeDate"), Integer.parseInt(pageNumber));
@@ -175,12 +175,12 @@ public class VictimController {
 	@RequestMapping(value = "/image/get", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public BaseRestResponse getUserImage(@RequestParam(value = "uid", defaultValue = "0") String userId){
-		ImageModel model = new ImageModel();
+		ImageDto model = new ImageDto();
 		try{
 			NotificationUserDbo user = this.notificationUserService.findNotificationUserById(Integer.parseInt(userId));
 			if(user != null){
 				model.setUserId(user.getNotificationUserId());
-				model.setNotificationUserimageBase64(user.getUserImageBase64());
+				model.setImageBase64(user.getUserImageBase64());
 			}
 		}
 		catch(Exception e){
@@ -212,7 +212,7 @@ public class VictimController {
 	@ResponseBody
 	public BaseRestResponse searchNotificationUsers(@RequestParam(value = "text", defaultValue = "") String searchText,
 			@RequestParam(value = "pn", defaultValue = "1") String pageNumber) {
-		PageModel<NotificationUserDto> response = new PageModel<NotificationUserDto>();
+		PageDto<NotificationUserDto> response = new PageDto<NotificationUserDto>();
 		try {
 			List<NotificationUserDbo> results = this.notificationUserService.searchNotificationUsers(searchText, Integer.parseInt(pageNumber));
 			if(results != null){

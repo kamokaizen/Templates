@@ -15,16 +15,10 @@
 <meta name="author" content="">
 
 <!-- Le styles -->
-<link
-	href="<%=request.getContextPath()%>/resources/bootstrap/css/bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="<%=request.getContextPath()%>/resources/bootstrap/css/bootstrap-theme.min.css"
-	rel="stylesheet">
-<link href="<%=request.getContextPath()%>/resources/css/welcome.css"
-	rel="stylesheet">
-<link rel="shortcut icon" type="image/x-icon"
-	href="<%=request.getContextPath()%>/resources/images/welcomefavicon.ico" />
+<link href="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+<link href="<%=request.getContextPath()%>/resources/css/welcome.css" rel="stylesheet">
+<link rel="shortcut icon" type="image/x-icon" href="<%=request.getContextPath()%>/resources/images/welcomefavicon.ico" />
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -37,11 +31,8 @@
 <body>
 
 	<div class="container">
-		<form class="form-signin" method="post"
-			action="<c:url value='j_spring_security_check' />">
-			<h2 class="form-signin-heading" id="welcomeHeader">
-				<spring:message code="header" />
-			</h2>
+		<form class="form-signin" method="post" action="<c:url value='j_spring_security_check' />">
+			<h2 class="form-signin-heading" id="welcomeHeader"><spring:message code="header" /></h2>
 			<c:choose>
 				<c:when test="${loginFailed}">
 					<div class="alert alert-danger" role="alert">
@@ -53,15 +44,11 @@
 			</c:choose>
 
 			<spring:message code="login_username" var="login_username" />
-			<label for="inputEmail" class="sr-only"><spring:message
-					code="login_username" /></label> <input name="j_username" id="inputEmail"
-				class="form-control" placeholder="${login_username}" required
-				autofocus style="margin-bottom: 5px;">
+			<label for="inputEmail" class="sr-only"><spring:message code="login_username" /></label> 
+			<input name="j_username" id="inputEmail" class="form-control" placeholder="${login_username}" required autofocus style="margin-bottom: 5px;">
 			<spring:message code="login_password" var="login_password" />
-			<label for="inputPassword" class="sr-only"><spring:message
-					code="login_password" /></label> <input type="password" name="j_password"
-				id="inputPassword" class="form-control"
-				placeholder="${login_password}" required style="margin-bottom: 5px;">
+			<label for="inputPassword" class="sr-only"><spring:message code="login_password" /></label> 
+			<input type="password" name="j_password" id="inputPassword" class="form-control" placeholder="${login_password}" required style="margin-bottom: 5px;">
 			<button class="btn btn-lg btn-primary btn-block" type="submit">
 				<spring:message code="login_signin" />
 			</button>
@@ -72,9 +59,7 @@
 	<!-- Le javascript
     ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
-	<script
-		src="<%=request.getContextPath()%>/resources/bootstrap/js/jquery.min.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/resources/bootstrap/js/bootstrap.min.js"></script>
+	<script src="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

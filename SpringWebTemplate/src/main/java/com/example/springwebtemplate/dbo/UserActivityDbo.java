@@ -1,10 +1,6 @@
 package com.example.springwebtemplate.dbo;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -117,20 +113,5 @@ public class UserActivityDbo extends MappedDomainObjectBase {
 
 	public String getUserLocation() {
 		return userLocation;
-	}
-
-	public String getSserActivityDateString() {
-		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
-		df.setTimeZone(TimeZone.getTimeZone("Europe/Istanbul"));
-		try {
-			return df.format(this.getUserActivityDate());
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public void setUserActivityDateString(String userActivityDateString) {
-		this.userActivityDateString = userActivityDateString;
 	}
 }

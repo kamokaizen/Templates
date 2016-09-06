@@ -5,10 +5,11 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.springwebtemplate.controller.response.base.BaseRestResponse;
 import com.example.springwebtemplate.dbo.NotificationUserDbo;
 import com.example.springwebtemplate.dbo.enums.NotificationTypeEnum;
 
-public class NotificationUserDto {
+public class NotificationUserDto implements BaseRestResponse {
 	@NotEmpty
 	@Size(min=1)
 	private String notificationUsername;

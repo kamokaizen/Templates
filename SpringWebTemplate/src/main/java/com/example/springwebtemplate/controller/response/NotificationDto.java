@@ -9,9 +9,10 @@ import java.util.TimeZone;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.example.springwebtemplate.controller.response.base.BaseRestResponse;
 import com.example.springwebtemplate.dbo.NotificationDbo;
 
-public class NotificationDto {
+public class NotificationDto implements BaseRestResponse {
 	private int notificationUser;
 	private int notificationOs;
 	private int notificationAction;

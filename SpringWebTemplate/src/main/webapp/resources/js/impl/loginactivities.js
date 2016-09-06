@@ -141,9 +141,9 @@ function getImageForType(userId, imageComponentId){
 			  data: '',
 			  dataType: 'json',
 			  success: function(jsonData) {
-				  pushImage(jsonData.userId, jsonData.notificationUserimageBase64);
+				  pushImage(jsonData.userId, jsonData.imageBase64);
 				  $('#'+ imageComponentId).fadeOut(200, function() {
-					  $('#'+ imageComponentId).attr('src', 'data:image/png;base64,'+ jsonData.notificationUserimageBase64);
+					  $('#'+ imageComponentId).attr('src', 'data:image/png;base64,'+ jsonData.imageBase64);
 			        }).fadeIn(400);
 			  },
 			  error: function() {

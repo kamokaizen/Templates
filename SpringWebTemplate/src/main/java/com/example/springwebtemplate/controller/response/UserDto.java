@@ -1,11 +1,18 @@
 package com.example.springwebtemplate.controller.response;
 
+import java.util.Calendar;
+
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
-public class UserDto {
+import com.example.springwebtemplate.controller.response.base.BaseRestResponse;
+import com.example.springwebtemplate.dbo.UserDbo;
 
+public class UserDto implements BaseRestResponse {
+
+	private long userId;
+	
 	@NotEmpty
 	private String name;
 
@@ -44,6 +51,23 @@ public class UserDto {
 		// TODO Auto-generated constructor stub
 	}
 
+	public UserDto(UserDbo user) {
+		if (user != null) {
+			this.userId = user.getUserId();
+			this.name = user.getName();
+			this.surname = user.getSurname();
+			this.username = user.getUsername();
+			this.email = user.getEmail();
+			this.city = (int) user.getCity().getCityId();
+			
+		    Calendar cal = Calendar.getInstance();
+		    cal.setTime(user.getBirthDate());
+		    this.birthYear = cal.get(Calendar.YEAR);
+		    this.birthMonth = cal.get(Calendar.MONTH);
+		    this.birthDay = cal.get(Calendar.DAY_OF_MONTH);
+		}
+	}
+	
 	public String getUsername() {
 		return username;
 	}
@@ -132,4 +156,11 @@ public class UserDto {
 		this.email = email;
 	}
 
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+	
+	public long getUserId() {
+		return userId;
+	}
 }
