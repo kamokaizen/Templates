@@ -65,6 +65,8 @@
 <body>
 	<div id="wrapper">
 		<input type="hidden" id="userIdValue" value='${userId}' />
+		<input type="hidden" id="csrfToken" value="${_csrf.token}"/>
+		<input type="hidden" id="csrfHeader" value="${_csrf.headerName}"/>
 		
 		<!-- Navigation -->
 		<%@ include file="/WEB-INF/views/navigation.jsp" %>

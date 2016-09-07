@@ -31,7 +31,7 @@
 <body>
 
 	<div class="container">
-		<form class="form-signin" method="post" action="<c:url value='j_spring_security_check' />">
+		<form class="form-signin" method="post" action="login">
 			<h2 class="form-signin-heading" id="welcomeHeader"><spring:message code="header" /></h2>
 			<c:choose>
 				<c:when test="${loginFailed}">
@@ -45,10 +45,11 @@
 
 			<spring:message code="login_username" var="login_username" />
 			<label for="inputEmail" class="sr-only"><spring:message code="login_username" /></label> 
-			<input name="j_username" id="inputEmail" class="form-control" placeholder="${login_username}" required autofocus style="margin-bottom: 5px;">
+			<input name="username" id="inputEmail" class="form-control" placeholder="${login_username}" required autofocus style="margin-bottom: 5px;">
 			<spring:message code="login_password" var="login_password" />
 			<label for="inputPassword" class="sr-only"><spring:message code="login_password" /></label> 
-			<input type="password" name="j_password" id="inputPassword" class="form-control" placeholder="${login_password}" required style="margin-bottom: 5px;">
+			<input type="password" name="password" id="inputPassword" class="form-control" placeholder="${login_password}" required style="margin-bottom: 5px;">
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 			<button class="btn btn-lg btn-primary btn-block" type="submit">
 				<spring:message code="login_signin" />
 			</button>

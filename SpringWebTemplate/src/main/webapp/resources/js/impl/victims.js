@@ -394,6 +394,9 @@ function createUser(){
         oMyForm.append("notificationUserimage", files[0]);	
     }
     
+    var token = $('#csrfToken').val();
+    var header = $('#csrfHeader').val();
+    
     $.ajax({
           url : "./create",
           data : oMyForm,
@@ -401,6 +404,9 @@ function createUser(){
           cache: false,
           contentType: false,
           processData: false,
+          beforeSend: function(xhr) {
+              xhr.setRequestHeader(header, token);
+          },
 		  success: function(jsonData) {
 			  resetVictimModal();
 			  $( "#createStatusField" ).show();
@@ -449,7 +455,10 @@ function createNotification(){
     oMyForm.append("notificationOs", $('#notificationOsSelection').val());
     oMyForm.append("notificationLocation", $('#notificationLocation').val());
     oMyForm.append("notificationIp", $('#notificationIP').val());
-		
+	
+    var token = $('#csrfToken').val();
+    var header = $('#csrfHeader').val();
+    
     $.ajax({
         url : "./cheat/new",
         data : oMyForm,
@@ -457,7 +466,10 @@ function createNotification(){
         cache: false,
         contentType: false,
         processData: false,
-		  success: function(jsonData) {
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+        },
+		success: function(jsonData) {
 			  resetVictimModal();
 			  $( "#createnotificationStatusField" ).show();
 			  

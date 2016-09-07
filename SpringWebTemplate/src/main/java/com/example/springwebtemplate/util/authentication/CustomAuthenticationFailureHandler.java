@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.example.springwebtemplate.dbo.UserActivityDbo;
 import com.example.springwebtemplate.dbo.UserDbo;
@@ -28,6 +29,9 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+    private UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter;
+	
 	private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticationFailureHandler.class);
 
 	public CustomAuthenticationFailureHandler() {
@@ -38,7 +42,9 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
 		// do some logic here if you want something to be done whenever the user failed logs in.
-		String username = (String) exception.getAuthentication().getPrincipal();
+		String usernameParameter = usernamePasswordAuthenticationFilter.getUsernameParameter();
+	    String username = request.getParameter(usernameParameter);
+		
 		logger.info("User [ " + username + " ] authentication failed!");
 
 		try {

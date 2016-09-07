@@ -8,11 +8,11 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc 
 		http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
 		http://www.springframework.org/schema/beans 
-		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 		http://www.springframework.org/schema/context 
-		http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/context/spring-context-4.3.xsd
 		http://www.springframework.org/schema/security 
-		http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+		http://www.springframework.org/schema/security/spring-security-4.1.xsd">
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 
 	<!-- @PreAuthorize("hasRole('ROLE_USER')") ile controller nesnelerinde authentication saglanmaktadır -->
@@ -32,19 +32,21 @@
 
 	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
-	<beans:bean
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
-	<beans:bean
-		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+	<beans:bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+    	<beans:property name="defaultContentType" value="application/json" />
 		<beans:property name="mediaTypes">
 			<beans:map>
 				<beans:entry key="html" value="text/html" />
 				<beans:entry key="json" value="application/json" />
+				<beans:entry key="xml" value="application/xml" />
 			</beans:map>
-		</beans:property>
+		</beans:property>	
+	</beans:bean>
+	<beans:bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">	
 		<beans:property name="viewResolvers">
 			<beans:list>
 				<beans:bean
@@ -59,7 +61,7 @@
 		<beans:property name="defaultViews">
 			<beans:list>
 				<beans:bean
-					class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+					class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
 					<beans:property name="prefixJson" value="false" />
 				</beans:bean>
 			</beans:list>
@@ -103,13 +105,14 @@
 	<beans:bean id="runMeTask" class="com.example.springwebtemplate.util.schedule.RunMeTask" />
 	
 	<!-- Spring Quartz -->
-	<beans:bean name="runMeJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+	<beans:bean name="runMeJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
 		<beans:property name="jobClass" value="com.example.springwebtemplate.util.schedule.RunMeJob" />
 		<beans:property name="jobDataAsMap">
 			<beans:map>
 				<beans:entry key="runMeTask" value-ref="runMeTask" />
 			</beans:map>
 		</beans:property>
+		<beans:property name="durability" value="true" />
 	</beans:bean>
 	
 	<beans:bean id="timeZone" class="java.util.TimeZone" factory-method="getTimeZone">
@@ -118,7 +121,7 @@
 	
 	<!-- Cron Trigger, fire at everyday 4:00 am -->
 	<beans:bean id="cronTrigger"
-		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<beans:property name="jobDetail" ref="runMeJob" />
 		<!-- Example Cron Trigger, run everyday 5 seconds-->
 		<!--<beans:property name="cronExpression" value="0/5 * * * * ?" /> -->

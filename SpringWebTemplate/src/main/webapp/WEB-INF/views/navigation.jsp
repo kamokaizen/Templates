@@ -33,9 +33,13 @@
 					</li>
 					<li class="divider"></li>
 					<li>
-						<a href="${contextPath}/<c:url value="j_spring_security_logout" />">
-							<i class="fa fa-sign-out fa-fw"></i> <spring:message code="menu_logout" />
-						</a>
+						<c:url var="logoutUrl" value="/logout"/>
+						<form class="form-signin" method="post" action="${logoutUrl}">
+							<a href="#" onclick="$(this).closest('form').submit()">
+								<i class="fa fa-sign-out fa-fw"></i> <spring:message code="menu_logout" />
+							</a>
+							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+						</form>
 					</li>
 				</ul>
 				<!-- /.dropdown-user -->
@@ -79,9 +83,13 @@
 					</li>
 					<li class="divider"></li>
 					<li>
-						<a href="${contextPath}/<c:url value="j_spring_security_logout" />">
-							<i class="fa fa-sign-out fa-fw"></i> <spring:message code="menu_logout" />
-						</a>
+						<c:url var="logoutUrl" value="/logout"/>
+						<form class="form-signin" method="post" action="${logoutUrl}">
+							<a href="#" onclick="$(this).closest('form').submit()">
+								<i class="fa fa-sign-out fa-fw"></i> <spring:message code="menu_logout" />
+							</a>
+							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+						</form>
 					</li>
 				</ul> 
 			</li>

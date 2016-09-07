@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -43,40 +43,45 @@ public class UserServiceImpl extends AbstractServiceImpl<UserDbo, Long> implemen
 		return userDao.findById(id);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
 		logger.info("Authentication starts for user: [ " + username + " ]");
 		Date startDate = new Date();
 		
+		UserDetails user = null;
 		UserDbo findUser = userDao.findUser(username);
 		List<GrantedAuthority> authority = new ArrayList<GrantedAuthority>();
-
+		
 		if(findUser != null){
 			int index = 0;
 			// Check user role
 			if(findUser.getRole() == UserRoleEnum.ROLE_USER){
-				authority.add(index, new GrantedAuthorityImpl("ROLE_USER"));
+				authority.add(index, new SimpleGrantedAuthority("ROLE_USER"));
 				index ++;
 			}
 			else if(findUser.getRole() == UserRoleEnum.ROLE_ADMIN){
-				authority.add(index, new GrantedAuthorityImpl("ROLE_USER"));
+				authority.add(index, new SimpleGrantedAuthority("ROLE_USER"));
+				authority.add(index, new SimpleGrantedAuthority("ROLE_ADMIN"));
 				index ++;
-				authority.add(index, new GrantedAuthorityImpl("ROLE_ADMIN"));
 			}
 			else if(findUser.getRole() == UserRoleEnum.ROLE_ANONYMOUS){
-				authority.add(index, new GrantedAuthorityImpl("ROLE_ANONYMOUS"));
+				authority.add(index, new SimpleGrantedAuthority("ROLE_ANONYMOUS"));
 			}
+			
+			Date credentialsLoadTime = new Date();
+			logger.info("user roles are loaded for user : [ " + username + " ] elapsed time " + (credentialsLoadTime.getTime() - startDate.getTime()) + " ms");
+			
+			user = new User(username, findUser.getPassword(), true, true, true, true, authority);
+			
+			Date detailsCreationTime = new Date();
+			logger.info("user details are created for user : [ " + username + " ] elapsed time " + (detailsCreationTime.getTime() - credentialsLoadTime.getTime()) + " ms");
 		}
-
-		Date credentialsLoadTime = new Date();
-		logger.info("user roles are loaded for user : [ " + username + " ] elapsed time " + (credentialsLoadTime.getTime() - startDate.getTime()) + " ms");
 		
-		UserDetails user = new User(username, findUser.getPassword(), true, true, true, true, authority);
-		
-		Date detailsCreationTime = new Date();
-		logger.info("user details are created for user : [ " + username + " ] elapsed time " + (detailsCreationTime.getTime() - credentialsLoadTime.getTime()) + " ms");
+		if(user == null){
+			authority.add(0, new SimpleGrantedAuthority("ROLE_ANONYMOUS"));
+			user = new User(username, "password", true, true, true, true, authority);
+		}
 		
 		return user;
 	}

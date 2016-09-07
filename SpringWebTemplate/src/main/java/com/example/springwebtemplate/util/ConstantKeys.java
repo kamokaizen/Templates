@@ -6,7 +6,6 @@ import java.util.List;
 
 public class ConstantKeys {	
 	public static final String database_config = "/datasource/database.properties";
-	public static final String application_config = "/configuration.properties";
 	public static final String turkey_cities = "/turkiye_iller.txt";
 	public static final String geoliteCities = "/GeoLiteCity.dat";
 		

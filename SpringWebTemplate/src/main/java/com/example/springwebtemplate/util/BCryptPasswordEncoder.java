@@ -31,11 +31,18 @@ public class BCryptPasswordEncoder implements PasswordEncoder {
 		Date passwordValidationStart = new Date();
 		logger.info("password validation started");
 		
-		boolean checkpw = BCrypt.checkpw(rawPass, encPass);
+		boolean checkpw = false;
 		
-		Date passwordValidationEnd = new Date();
-		logger.info("password validation is over, elapsed time " + (passwordValidationEnd.getTime() - passwordValidationStart.getTime()) + " ms");
-		
+		try{
+			checkpw = BCrypt.checkpw(rawPass, encPass);
+			
+			Date passwordValidationEnd = new Date();
+			logger.info("password validation is over, elapsed time " + (passwordValidationEnd.getTime() - passwordValidationStart.getTime()) + " ms");	
+		}
+		catch(Exception e){
+			logger.error("something went wrong during password validation error: " + e.getLocalizedMessage());
+		}
+				
 		return checkpw;
 	}
 	

@@ -179,7 +179,10 @@ function updateNotification(){
     oMyForm.append("notificationDate", $('#updatenotificationDate').val());
     oMyForm.append("notificationLocation", $('#updatenotificationLocation').val());
     oMyForm.append("notificationIp", $('#updatenotificationIP').val());
-		
+	
+    var token = $('#csrfToken').val();
+    var header = $('#csrfHeader').val();
+    
     $.ajax({
         url : "./update",
         data : oMyForm,
@@ -187,7 +190,10 @@ function updateNotification(){
         cache: false,
         contentType: false,
         processData: false,
-		  success: function(jsonData) {
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+        },
+		success: function(jsonData) {
 			  resetModal();
 			  $( "#updateNotificationStatusField" ).show();
 			  
