@@ -18,7 +18,7 @@
 		<mysql-version>5.1.20</mysql-version>
 		<maxmind.geoip.version>1.2.10</maxmind.geoip.version>
 		<java-mail-version>1.4.3</java-mail-version>
-		<jackson-version>2.3.0</jackson-version>
+		<jackson-version>2.7.1</jackson-version>
 		<quartz-version>2.2.1</quartz-version>
 		<esapi-version>2.1.0</esapi-version>
 		<thumbnailator-version>0.4.8</thumbnailator-version>

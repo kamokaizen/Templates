@@ -20,17 +20,7 @@ public class ConstantKeys {
 	public static final String notification_idle = "/image/notification_idle.png";
 	public static final String notification_fail = "/image/notification_fail.png";
 	public static final String notification_success = "/image/notification_success.png";
-	
-	public static final String logoGoogle = "/image/google.png";
-	public static final String logoHotmail = "/image/outlook.png";
-	public static final String logoYahoo = "/image/yahoo.png";
-	public static final String googleLock = "/image/googleLock.png";
-	public static final String googleSeperator = "/image/googleSeperator.png";
-	public static final String googleDeviceWindows = "/image/googleDeviceWindows.png";
-	public static final String googleDeviceAndroid = "/image/googleDeviceAndroid.png";
-	public static final String googleDeviceApple = "/image/googleDeviceApple.png";
-	public static final String googleDeviceMac = "/image/googleDeviceMac.png";
-	
+		
 	public static final String loginImage = "/image/login-image.png";
 	public static final String logoutImage = "/image/logout-image.png";
 	public static final String loginFailImage = "/image/login-fail-image.png";

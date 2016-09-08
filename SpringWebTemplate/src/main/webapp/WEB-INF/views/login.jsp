@@ -15,8 +15,8 @@
 <meta name="author" content="">
 
 <!-- Le styles -->
-<link href="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+<link href="<%=request.getContextPath()%>/resources/plugins/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="<%=request.getContextPath()%>/resources/plugins/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
 <link href="<%=request.getContextPath()%>/resources/css/welcome.css" rel="stylesheet">
 <link rel="shortcut icon" type="image/x-icon" href="<%=request.getContextPath()%>/resources/images/welcomefavicon.ico" />
 
@@ -60,7 +60,7 @@
 	<!-- Le javascript
     ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
-	<script src="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/jquery/dist/jquery.min.js"></script>
-	<script src="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="<%=request.getContextPath()%>/resources/plugins/jquery/dist/jquery.min.js"></script>
+	<script src="<%=request.getContextPath()%>/resources/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -20,22 +20,22 @@
     <link rel="shortcut icon" type="image/x-icon" href="<%=request.getContextPath()%>/resources/images/welcomefavicon.ico" />
 
     <!-- Bootstrap Core CSS -->
-    <link href="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%=request.getContextPath()%>/resources/plugins/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- MetisMenu CSS -->
-    <link href="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+    <link href="<%=request.getContextPath()%>/resources/plugins/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
 
     <!-- Timeline CSS -->
-    <link href="<%=request.getContextPath()%>/resources/bootstraptemplate/dist/css/timeline.css" rel="stylesheet">
+    <link href="<%=request.getContextPath()%>/resources/css/timeline.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="<%=request.getContextPath()%>/resources/bootstraptemplate/dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="<%=request.getContextPath()%>/resources/css/sb-admin-2.css" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
-    <link href="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/morrisjs/morris.css" rel="stylesheet">
+    <link href="<%=request.getContextPath()%>/resources/plugins/morrisjs/morris.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="<%=request.getContextPath()%>/resources/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 	
 	<link href="<%=request.getContextPath()%>/resources/css/home.css" rel="stylesheet">
 
@@ -406,21 +406,20 @@
     <!-- /#wrapper -->
 
     <!-- jQuery -->
-    <script src="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="<%=request.getContextPath()%>/resources/plugins/jquery/dist/jquery.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="<%=request.getContextPath()%>/resources/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
 
     <!-- Metis Menu Plugin JavaScript -->
-    <script src="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="<%=request.getContextPath()%>/resources/plugins/metisMenu/dist/metisMenu.min.js"></script>
 
     <!-- Morris Charts JavaScript -->
-    <script src="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/raphael/raphael-min.js"></script>
-    <script src="<%=request.getContextPath()%>/resources/bootstraptemplate/bower_components/morrisjs/morris.min.js"></script>
-    <script src="<%=request.getContextPath()%>/resources/bootstraptemplate/js/morris-data.js"></script>
+    <script src="<%=request.getContextPath()%>/resources/plugins/raphael/raphael-min.js"></script>
+    <script src="<%=request.getContextPath()%>/resources/plugins/morrisjs/morris.min.js"></script>
 
     <!-- Custom Theme JavaScript -->
-    <script src="<%=request.getContextPath()%>/resources/bootstraptemplate/dist/js/sb-admin-2.js"></script>
+    <script src="<%=request.getContextPath()%>/resources/js/jquery/sb-admin-2.js"></script>
     <script src="<%=request.getContextPath()%>/resources/js/jquery/chance.min.js"></script>
 	<script src="<%=request.getContextPath()%>/resources/js/impl/home.js"></script>
 </body>
