@@ -156,36 +156,34 @@ $('#search-button').on('click', function() {
 });
 
 function getVictims() {
-	$.ajax({
-		type : 'GET',
-		url : './get?pn=' + notificationUsersPageNumber,
-		data : '',
-		dataType : 'json',
-		success : function(jsonData) {
+	makeServiceCall('GET', './get?pn=' + notificationUsersPageNumber, '', 'json', function(err, jsonData){
+		if(err){
+			$('#failDismissible').show();
+			$('#failDismissibleStrong').html(err);
+		}
+		else{
 			if (notificationUsers == null) {
 				notificationUsers = jsonData;
 				$('#notification_users_listview_component').empty();
 				setVictims(notificationUsers.pageResult);
 			} else {
 				notificationUsers.pageResult = $.merge(
-						notificationUsers.pageResult, jsonData.pageResult);
+			    notificationUsers.pageResult, jsonData.pageResult);
 				notificationUsers.page = jsonData.page;
 				notificationUsers.totalPage = jsonData.totalPage;
 				setVictims(jsonData.pageResult);
 			}
-		},
-		error : function() {
 		}
 	});
 }
 
 function searchVictims(searchText) {
-	$.ajax({
-		type : 'GET',
-		url : './search?text=' + searchText + '&pn=' + searchPageNumber,
-		data : '',
-		dataType : 'json',
-		success : function(jsonData) {			
+	makeServiceCall('GET', './search?text=' + searchText + '&pn=' + searchPageNumber, '', 'json', function(err, jsonData){
+		if(err){
+			$('#failDismissible').show();
+			$('#failDismissibleStrong').html(err);
+		}
+		else{
 			if (notificationUsers == null) {
 				notificationUsers = jsonData;
 				$('#notification_users_listview_component').empty();
@@ -196,8 +194,6 @@ function searchVictims(searchText) {
 				notificationUsers.totalPage = jsonData.totalPage;
 				setVictims(jsonData.pageResult);
 			}
-		},
-		error : function() {
 		}
 	});
 }
@@ -276,29 +272,18 @@ function getImageForUser(userId, imageComponentId) {
 							'data:image/png;base64,' + image);
 				}).fadeIn(400);
 	} else {
-		$
-				.ajax({
-					type : 'GET',
-					url : './image/get?uid=' + userId,
-					data : '',
-					dataType : 'json',
-					success : function(jsonData) {
-						pushImage(jsonData.userId,
-								jsonData.imageBase64);
-						$('#' + imageComponentId)
-								.fadeOut(
-										200,
-										function() {
-											$('#' + imageComponentId)
-													.attr(
-															'src',
-															'data:image/png;base64,'
-																	+ jsonData.imageBase64);
-										}).fadeIn(400);
-					},
-					error : function() {
-					}
-				});
+		makeServiceCall('GET', './image/get?uid=' + userId, '', 'json', function(err, jsonData){
+			if(err){
+				$('#failDismissible').show();
+				$('#failDismissibleStrong').html(err);
+			}
+			else{
+				pushImage(jsonData.userId, jsonData.imageBase64);
+				$('#' + imageComponentId).fadeOut(200, function() {
+					$('#' + imageComponentId).attr('src','data:image/png;base64,' + jsonData.imageBase64);
+				}).fadeIn(400);
+			}
+		});
 	}
 }
 
@@ -306,200 +291,173 @@ function deleteUser() {
 	$("#user-confirm-delete").modal('hide');
 	setTimeout(
 			function() {
-				$
-						.ajax({
-							type : 'GET',
-							url : './delete?uid=' + selectedUserId,
-							data : '',
-							dataType : 'json',
-							success : function(jsonData) {
-								  $('#successDeleteDismissible').show();
-								  $('#successDeleteDismissibleStrong').html(jsonData.reason);
-								  refreshVictims();
-							},
-							error : function() {
-							}
-						});
+				makeServiceCall('GET', './delete?uid=' + selectedUserId, '', 'json', function(err, jsonData){
+					if(err){
+						$('#failDismissible').show();
+						$('#failDismissibleStrong').html(err);
+					}
+					else{
+					   $('#successDeleteDismissible').show();
+					   $('#successDeleteDismissibleStrong').html(jsonData.reason);
+					   refreshVictims();
+					}
+				});
 			}, 100);
 }
 
 function updateUser(){
-    var oMyForm = new FormData();
-    oMyForm.append("notificationUserId", selectedUserId);
-    oMyForm.append("notificationUsername", $('#updateNameField').val());
-    oMyForm.append("notificationUsersurname", $('#updateSurnameField').val());
-    oMyForm.append("notificationUserusername", $('#updateUsernameField').val());
-    oMyForm.append("notificationUseremail", $('#updateEmailField').val());
+    var formData = new FormData();
+    formData.append("notificationUserId", selectedUserId);
+    formData.append("notificationUsername", $('#updateNameField').val());
+    formData.append("notificationUsersurname", $('#updateSurnameField').val());
+    formData.append("notificationUserusername", $('#updateUsernameField').val());
+    formData.append("notificationUseremail", $('#updateEmailField').val());
     if(files && files[0] != null || files && files[0] != undefined){
-        oMyForm.append("notificationUserimage", files[0]);	
+    	formData.append("notificationUserimage", files[0]);	
     }
-    oMyForm.append("notificationUserimageChanged", fileChanged);
+    formData.append("notificationUserimageChanged", fileChanged);
     
-    $.ajax({
-          url : "./update",
-          data : oMyForm,
-          type : "POST",
-          cache: false,
-          contentType: false,
-          processData: false,
-		  success: function(jsonData) {
-			  resetVictimModal();
-			  $( "#updateStatusField" ).show();
+	makeMultipartFormDataCall("POST", "./update", formData, function(err, jsonData){
+		if(err){
+			$('#failDismissible').show();
+			$('#failDismissibleStrong').html(err);
+		}
+		else{
+			resetVictimModal();
+			$( "#updateStatusField" ).show();
 			  
-			  if(jsonData.status == false){
-				  $('#updateStatusField').text('Düzenleme Hatası');
-				  $('#updateStatusField').addClass('alert-danger');
-				  
-				  if(jsonData.errors.notificationUsername != null){
-					  $('#updateNameField').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUsername , 'html': false});
-					  $('#updateNameField').closest('.form-group').addClass('has-error');
-				  }
-				  if(jsonData.errors.notificationUsersurname != null){
-					  $('#updateSurnameField').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUsersurname , 'html': false});
-					  $('#updateSurnameField').closest('.form-group').addClass('has-error');
-				  }
-				  if(jsonData.errors.notificationUserusername != null){
-					  $('#updateUsernameField').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUserusername , 'html': false});
-					  $('#updateUsernameField').closest('.form-group').addClass('has-error');
-				  }
-				  if(jsonData.errors.notificationUseremail != null){
-					  $('#updateEmailField').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUseremail , 'html': false});
-					  $('#updateEmailField').closest('.form-group').addClass('has-error');
-				  }
-				  if(jsonData.errors.notificationUserimage != null){
-					  $('#notificationUserimage').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUserimage , 'html': false});
-					  $('#notificationUserimage').closest('.form-group').addClass('has-error');
-				  }
+		    if(jsonData.status == false){
+			  $('#updateStatusField').text('Düzenleme Hatası');
+			  $('#updateStatusField').addClass('alert-danger');
+			  
+			  if(jsonData.errors.notificationUsername != null){
+				  $('#updateNameField').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUsername , 'html': false});
+				  $('#updateNameField').closest('.form-group').addClass('has-error');
 			  }
-			  else{				  
-				  resetVictimModal();
-				  resetValues();
-				  $("#updateVictimModal").modal('hide');
-				  $('#successUserUpdateDismissible').show();
-				  refreshVictims();
+			  if(jsonData.errors.notificationUsersurname != null){
+				  $('#updateSurnameField').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUsersurname , 'html': false});
+				  $('#updateSurnameField').closest('.form-group').addClass('has-error');
 			  }
-		  },
-		  error: function() {
-		  }
-      });
+			  if(jsonData.errors.notificationUserusername != null){
+				  $('#updateUsernameField').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUserusername , 'html': false});
+				  $('#updateUsernameField').closest('.form-group').addClass('has-error');
+			  }
+			  if(jsonData.errors.notificationUseremail != null){
+				  $('#updateEmailField').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUseremail , 'html': false});
+				  $('#updateEmailField').closest('.form-group').addClass('has-error');
+			  }
+			  if(jsonData.errors.notificationUserimage != null){
+				  $('#notificationUserimage').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUserimage , 'html': false});
+				  $('#notificationUserimage').closest('.form-group').addClass('has-error');
+			  }
+		    }
+		    else{				  
+			  resetVictimModal();
+			  resetValues();
+			  $("#updateVictimModal").modal('hide');
+			  $('#successUserUpdateDismissible').show();
+			  refreshVictims();
+		    }
+		}
+	});
 }
 
 function createUser(){
-    var oMyForm = new FormData();
-    oMyForm.append("notificationUsername", $('#createNameField').val());
-    oMyForm.append("notificationUsersurname", $('#createSurnameField').val());
-    oMyForm.append("notificationUserusername", $('#createUsernameField').val());
-    oMyForm.append("notificationUseremail", $('#createEmailField').val());
+    var formData = new FormData();
+    formData.append("notificationUsername", $('#createNameField').val());
+    formData.append("notificationUsersurname", $('#createSurnameField').val());
+    formData.append("notificationUserusername", $('#createUsernameField').val());
+    formData.append("notificationUseremail", $('#createEmailField').val());
     if(files && files[0] != null || files && files[0] != undefined){
-        oMyForm.append("notificationUserimage", files[0]);	
+    	formData.append("notificationUserimage", files[0]);	
     }
     
-    var token = $('#csrfToken').val();
-    var header = $('#csrfHeader').val();
-    
-    $.ajax({
-          url : "./create",
-          data : oMyForm,
-          type : "POST",
-          cache: false,
-          contentType: false,
-          processData: false,
-          beforeSend: function(xhr) {
-              xhr.setRequestHeader(header, token);
-          },
-		  success: function(jsonData) {
-			  resetVictimModal();
-			  $( "#createStatusField" ).show();
+	makeMultipartFormDataCall("POST", "./create", formData, function(err, jsonData){
+		if(err){
+			$('#failDismissible').show();
+			$('#failDismissibleStrong').html(err);
+		}
+		else{
+			resetVictimModal();
+			$( "#createStatusField" ).show();
 			  
-			  if(jsonData.status == false){
-				  $('#createStatusField').text('Kullanıcı oluşturulamadı!');
-				  $('#createStatusField').addClass('alert-danger');
-				  
-				  if(jsonData.errors.notificationUsername != null){
-					  $('#createNameField').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUsername , 'html': false});
-					  $('#createNameField').closest('.form-group').addClass('has-error');
-				  }
-				  if(jsonData.errors.notificationUsersurname != null){
-					  $('#createSurnameField').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUsersurname , 'html': false});
-					  $('#createSurnameField').closest('.form-group').addClass('has-error');
-				  }
-				  if(jsonData.errors.notificationUserusername != null){
-					  $('#createUsernameField').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUserusername , 'html': false});
-					  $('#createUsernameField').closest('.form-group').addClass('has-error');
-				  }
-				  if(jsonData.errors.notificationUseremail != null){
-					  $('#createEmailField').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUseremail , 'html': false});
-					  $('#createEmailField').closest('.form-group').addClass('has-error');
-				  }
-				  if(jsonData.errors.notificationUserimage != null){
-					  $('#createNotificationUserimage').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUserimage , 'html': false});
-					  $('#createNotificationUserimage').closest('.form-group').addClass('has-error');
-				  }
+			if(jsonData.status == false){
+			  $('#createStatusField').text('Kullanıcı oluşturulamadı!');
+			  $('#createStatusField').addClass('alert-danger');
+			  
+			  if(jsonData.errors.notificationUsername != null){
+				  $('#createNameField').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUsername , 'html': false});
+				  $('#createNameField').closest('.form-group').addClass('has-error');
 			  }
-			  else{
-				  resetVictimModal();
-				  resetValues();
-				  $("#newVictimModal").modal('hide');
-				  $('#successUserDismissible').show();
-				  refreshVictims();
+			  if(jsonData.errors.notificationUsersurname != null){
+				  $('#createSurnameField').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUsersurname , 'html': false});
+				  $('#createSurnameField').closest('.form-group').addClass('has-error');
 			  }
-		  },
-		  error: function() {
-		  }
-      });
+			  if(jsonData.errors.notificationUserusername != null){
+				  $('#createUsernameField').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUserusername , 'html': false});
+				  $('#createUsernameField').closest('.form-group').addClass('has-error');
+			  }
+			  if(jsonData.errors.notificationUseremail != null){
+				  $('#createEmailField').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUseremail , 'html': false});
+				  $('#createEmailField').closest('.form-group').addClass('has-error');
+			  }
+			  if(jsonData.errors.notificationUserimage != null){
+				  $('#createNotificationUserimage').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationUserimage , 'html': false});
+				  $('#createNotificationUserimage').closest('.form-group').addClass('has-error');
+			  }
+			}
+			else{
+			  resetVictimModal();
+			  resetValues();
+			  $("#newVictimModal").modal('hide');
+			  $('#successUserDismissible').show();
+			  refreshVictims();
+			}
+		}
+	});
 }
 
 function createNotification(){
-    var oMyForm = new FormData();
-    oMyForm.append("notificationUser", selectedUserId);
-    oMyForm.append("notificationOs", $('#notificationOsSelection').val());
-    oMyForm.append("notificationLocation", $('#notificationLocation').val());
-    oMyForm.append("notificationIp", $('#notificationIP').val());
+    var formData = new FormData();
+    formData.append("notificationUser", selectedUserId);
+    formData.append("notificationOs", $('#notificationOsSelection').val());
+    formData.append("notificationLocation", $('#notificationLocation').val());
+    formData.append("notificationIp", $('#notificationIP').val());
 	
-    var token = $('#csrfToken').val();
-    var header = $('#csrfHeader').val();
-    
-    $.ajax({
-        url : "./cheat/new",
-        data : oMyForm,
-        type : "POST",
-        cache: false,
-        contentType: false,
-        processData: false,
-        beforeSend: function(xhr) {
-            xhr.setRequestHeader(header, token);
-        },
-		success: function(jsonData) {
-			  resetVictimModal();
-			  $( "#createnotificationStatusField" ).show();
+	makeMultipartFormDataCall("POST", "./cheat/new", formData, function(err, jsonData){
+		if(err){
+			$('#failDismissible').show();
+			$('#failDismissibleStrong').html(err);
+		}
+		else{
+			resetVictimModal();
+			$( "#createnotificationStatusField" ).show();
+		  
+			if(jsonData.status == false){
+				$('#createnotificationStatusField').text('Notifikasyon oluşturulamadı!');
+				$('#createnotificationStatusField').addClass('alert-danger');
 			  
-			  if(jsonData.status == false){
-				  $('#createnotificationStatusField').text('Notifikasyon oluşturulamadı!');
-				  $('#createnotificationStatusField').addClass('alert-danger');
-				  
-				  if(jsonData.errors.notificationLocation != null){
-					  $('#notificationLocation').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationLocation , 'html': false});
-					  $('#notificationLocation').closest('.form-group').addClass('has-error');
-				  }
-				  if(jsonData.errors.notificationIp != null){
-					  $('#notificationIP').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationIp , 'html': false});
-					  $('#notificationIP').closest('.form-group').addClass('has-error');
-				  }
-				  if(jsonData.errors.notificationOs != null){
-					  $('#notificationOsSelection').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationOs , 'html': false});
-					  $('#notificationOsSelection').closest('.form-group').addClass('has-error');
-				  }
+			  if(jsonData.errors.notificationLocation != null){
+				  $('#notificationLocation').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationLocation , 'html': false});
+				  $('#notificationLocation').closest('.form-group').addClass('has-error');
 			  }
-			  else{
-				  resetVictimModal();
-				  resetValues();
-				  $("#newNotificationModal").modal('hide');
-				  $('#successNotificationDismissible').show();
+			  if(jsonData.errors.notificationIp != null){
+				  $('#notificationIP').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationIp , 'html': false});
+				  $('#notificationIP').closest('.form-group').addClass('has-error');
 			  }
-		  },
-		  error: function() {
+			  if(jsonData.errors.notificationOs != null){
+				  $('#notificationOsSelection').tooltip({'trigger':'focus', 'title': jsonData.errors.notificationOs , 'html': false});
+				  $('#notificationOsSelection').closest('.form-group').addClass('has-error');
+			  }
 		  }
-    });
+		  else{
+			  resetVictimModal();
+			  resetValues();
+			  $("#newNotificationModal").modal('hide');
+			  $('#successNotificationDismissible').show();
+		  }
+		}
+	});
 }
 
 function createRandomNotification(){
@@ -597,19 +555,17 @@ function getTypeImageForUser(typeId, imageComponentId){
         }).fadeIn(400);
 	}
 	else{
-		$.ajax({
-			  type: 'GET',
-			  url: './cheat/type/image/get?tid=' + typeId,
-			  data: '',
-			  dataType: 'json',
-			  success: function(jsonData) {
-				  pushTypeImage(jsonData.userId, jsonData.imageBase64);
-				  $('#'+ imageComponentId).fadeOut(200, function() {
-					  $('#'+ imageComponentId).attr('src', 'data:image/png;base64,'+ jsonData.imageBase64);
-			        }).fadeIn(400);
-			  },
-			  error: function() {
-			  }
+		makeServiceCall('GET', './cheat/type/image/get?tid=' + typeId, '', 'json', function(err, jsonData){
+			if(err){
+				$('#failDismissible').show();
+				$('#failDismissibleStrong').html(err);
+			}
+			else{
+				pushTypeImage(jsonData.userId, jsonData.imageBase64);
+				$('#'+ imageComponentId).fadeOut(200, function() {
+				  $('#'+ imageComponentId).attr('src', 'data:image/png;base64,'+ jsonData.imageBase64);
+		        }).fadeIn(400);
+			}
 		});
 	}	
 }

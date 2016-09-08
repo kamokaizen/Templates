@@ -1,30 +1,28 @@
 getTotalVictimNumber();
 getTotalNotificationNumber();
 
+$('.close').click(function() { $('.alert').hide(); })
+
 function getTotalVictimNumber() {
-	$.ajax({
-		type : 'GET',
-		url : './victim/count',
-		data : '',
-		dataType : 'json',
-		success : function(count) {
-			$('#totalVictimDiv').html(count);
-		},
-		error : function() {
+	makeServiceCall('GET', './victim/count', '', 'json', function(err, jsonData){
+		if(err){
+			$('#failDismissible').show();
+			$('#failDismissibleStrong').html(err);
+		}
+		else{
+			$('#totalVictimDiv').html(jsonData);
 		}
 	});
 }
 
 function getTotalNotificationNumber() {
-	$.ajax({
-		type : 'GET',
-		url : './cheat/count',
-		data : '',
-		dataType : 'json',
-		success : function(count) {
-			$('#totalNotificationDiv').html(count);
-		},
-		error : function() {
+	makeServiceCall('GET', './cheat/count', '', 'json', function(err, jsonData){
+		if(err){
+			$('#failDismissible').show();
+			$('#failDismissibleStrong').html(err);
+		}
+		else{
+			$('#totalNotificationDiv').html(jsonData);
 		}
 	});
 }

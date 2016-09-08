@@ -6,6 +6,8 @@ var typeImageMap = new Object();
 var userActivityPageNumber=1;
 var selectedActivityId=0;
 
+$('.close').click(function() { $('.alert').hide(); })
+
 $("#user_activities_listview_component").on("click", "li", function(e){
 	e.preventDefault();
 	selectedActivityId = $(this).attr("id");
@@ -43,46 +45,42 @@ $('#searchActivityTextField').keyup(function(){
 getuserActivities();
 
 function getuserActivities(){
-	$.ajax({
-		  type: 'GET',
-		  url: './get?uid=0&pn=' + userActivityPageNumber,
-		  data: '',
-		  dataType: 'json',
-		  success: function(jsonData) {			  
-			  if(userActivities == null){
-				  userActivities = jsonData;
-				  $('#user_activities_listview_component').empty();
-				  setuserActivities(userActivities.pageResult);
-			  }
-			  else{
-				  userActivities.pageResult = $.merge(userActivities.pageResult,jsonData.pageResult);
-				  userActivities.page = jsonData.page;
-				  userActivities.totalPage = jsonData.totalPage;
-				  setuserActivities(jsonData.pageResult);
-			  }
-		  },
-		  error: function() {
+	makeServiceCall('GET', './get?uid=0&pn=' + userActivityPageNumber, '', 'json', function(err, jsonData){
+		if(err){
+			$('#failDismissible').show();
+			$('#failDismissibleStrong').html(err);
+		}
+		else{
+		  if(userActivities == null){
+			  userActivities = jsonData;
+			  $('#user_activities_listview_component').empty();
+			  setuserActivities(userActivities.pageResult);
 		  }
+		  else{
+			  userActivities.pageResult = $.merge(userActivities.pageResult,jsonData.pageResult);
+			  userActivities.page = jsonData.page;
+			  userActivities.totalPage = jsonData.totalPage;
+			  setuserActivities(jsonData.pageResult);
+		  }
+		}
 	});
 }
 
 function deleteActivity(){
 	$("#activity-confirm-delete").modal('hide');
 	setTimeout(function(){
-		$.ajax({
-			  type: 'GET',
-			  url: './delete?aid=' + selectedActivityId,
-			  data: '',
-			  dataType: 'json',
-			  success: function(jsonData) {
-				  $('#successDeleteDismissible').show();
-				  $('#successDeleteDismissibleStrong').html(jsonData.reason);
-				  refreshuserActivities();
-			  },
-			  error: function() {
-			  }
+		makeServiceCall('GET', './delete?aid=' + selectedActivityId, '', 'json', function(err, jsonData){
+			if(err){
+				$('#failDismissible').show();
+				$('#failDismissibleStrong').html(err);
+			}
+			else{
+				$('#successDeleteDismissible').show();
+				$('#successDeleteDismissibleStrong').html(jsonData.reason);
+				refreshuserActivities();
+			}
 		});
-		}, 100);
+	}, 100);
 }
 
 function setuserActivities(results){
@@ -135,19 +133,17 @@ function getImageForType(userId, imageComponentId){
         }).fadeIn(400);
 	}
 	else{
-		$.ajax({
-			  type: 'GET',
-			  url: './image/get?tid=' + userId,
-			  data: '',
-			  dataType: 'json',
-			  success: function(jsonData) {
-				  pushImage(jsonData.userId, jsonData.imageBase64);
-				  $('#'+ imageComponentId).fadeOut(200, function() {
-					  $('#'+ imageComponentId).attr('src', 'data:image/png;base64,'+ jsonData.imageBase64);
-			        }).fadeIn(400);
-			  },
-			  error: function() {
-			  }
+		makeServiceCall('GET', './image/get?tid=' + userId, '', 'json', function(err, jsonData){
+			if(err){
+				$('#failDismissible').show();
+				$('#failDismissibleStrong').html(err);
+			}
+			else{
+				pushImage(jsonData.userId, jsonData.imageBase64);
+				$('#'+ imageComponentId).fadeOut(200, function() {
+				  $('#'+ imageComponentId).attr('src', 'data:image/png;base64,'+ jsonData.imageBase64);
+		        }).fadeIn(400);
+			}
 		});
 	}	
 }

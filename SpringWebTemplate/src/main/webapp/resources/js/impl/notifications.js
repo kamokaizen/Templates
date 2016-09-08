@@ -14,6 +14,8 @@ var notificationsPageNumber=1;
 var searchPageNumber = 1;
 var searchMode = false;
 
+$('.close').click(function() { $('.alert').hide(); })
+
 $("#notifications_listview_component").on("click", "li", function(e){
 	e.preventDefault();
 	selectedNotificationId = $(this).attr("id");
@@ -107,12 +109,12 @@ $('#search-button').on('click', function() {
 getNotifications();
 
 function getNotifications(){
-	$.ajax({
-		  type: 'GET',
-		  url: './get?pn=' + notificationsPageNumber,
-		  data: '',
-		  dataType: 'json',
-		  success: function(jsonData) {
+	makeServiceCall('GET', './get?pn=' + notificationsPageNumber, '', 'json', function(err, jsonData){
+		if(err){
+			$('#failDismissible').show();
+			$('#failDismissibleStrong').html(err);
+		}
+		else{
 			  if(notifications == null){
 				  notifications = jsonData;
 				  $('#notifications_listview_component').empty();
@@ -124,19 +126,17 @@ function getNotifications(){
 				  notifications.totalPage = jsonData.totalPage;
 				  setNotifications(jsonData.pageResult);
 			  }
-		  },
-		  error: function() {
-		  }
+		}
 	});
 }
 
 function searchNotifications(searchText) {
-	$.ajax({
-		type : 'GET',
-		url : './search?text=' + searchText + '&pn=' + searchPageNumber,
-		data : '',
-		dataType : 'json',
-		success : function(jsonData) {			
+	makeServiceCall('GET', './search?text=' + searchText + '&pn=' + searchPageNumber, '', 'json', function(err, jsonData){
+		if(err){
+			$('#failDismissible').show();
+			$('#failDismissibleStrong').html(err);
+		}
+		else{
 			if (notifications == null) {
 				notifications = jsonData;
 				$('#notifications_listview_component').empty();
@@ -147,8 +147,6 @@ function searchNotifications(searchText) {
 				  notifications.totalPage = jsonData.totalPage;
 				  setNotifications(jsonData.pageResult);
 			}
-		},
-		error : function() {
 		}
 	});
 }
@@ -156,44 +154,34 @@ function searchNotifications(searchText) {
 function deleteNotification(){
 	$("#notification-confirm-delete").modal('hide');
 	setTimeout(function(){
-		$.ajax({
-			  type: 'GET',
-			  url: './delete?nid=' + selectedNotificationId,
-			  data: '',
-			  dataType: 'json',
-			  success: function(jsonData) {
+		makeServiceCall('GET', './delete?nid=' + selectedNotificationId, '', 'json', function(err, jsonData){
+			if(err){
+				$('#failDismissible').show();
+				$('#failDismissibleStrong').html(err);
+			}
+			else{
 				  $('#successDeleteDismissible').show();
 				  $('#successDeleteDismissibleStrong').html(jsonData.reason);
 				  refreshNotifications();
-			  },
-			  error: function() {
-			  }
+			}
 		});
-		}, 1000);
+		}, 100);
 }
 
 function updateNotification(){
-    var oMyForm = new FormData();
-    oMyForm.append("notificationId", selectedNotificationId);
-    oMyForm.append("notificationOs", $('#updatenotificationOsSelection').val());
-    oMyForm.append("notificationDate", $('#updatenotificationDate').val());
-    oMyForm.append("notificationLocation", $('#updatenotificationLocation').val());
-    oMyForm.append("notificationIp", $('#updatenotificationIP').val());
+    var formData = new FormData();
+    formData.append("notificationId", selectedNotificationId);
+    formData.append("notificationOs", $('#updatenotificationOsSelection').val());
+    formData.append("notificationDate", $('#updatenotificationDate').val());
+    formData.append("notificationLocation", $('#updatenotificationLocation').val());
+    formData.append("notificationIp", $('#updatenotificationIP').val());
 	
-    var token = $('#csrfToken').val();
-    var header = $('#csrfHeader').val();
-    
-    $.ajax({
-        url : "./update",
-        data : oMyForm,
-        type : "POST",
-        cache: false,
-        contentType: false,
-        processData: false,
-        beforeSend: function(xhr) {
-            xhr.setRequestHeader(header, token);
-        },
-		success: function(jsonData) {
+	makeMultipartFormDataCall("POST", "./update", formData, function(err, jsonData){
+		if(err){
+			$('#failDismissible').show();
+			$('#failDismissibleStrong').html(err);
+		}
+		else{
 			  resetModal();
 			  $( "#updateNotificationStatusField" ).show();
 			  
@@ -229,10 +217,8 @@ function updateNotification(){
 				  $('#successNotificationUpdateDismissible').show();
 				  refreshNotifications();
 			  }
-		  },
-		  error: function() {
-		  }
-    });
+		}
+	});
 }
 
 function updateRandomNotification(){
@@ -294,43 +280,39 @@ function setNotifications(results){
 
 function createNotificationStatePanel(notificationId){
 	var notificationItem = getNotificationItem(notificationId);
-	$.ajax({
-		  type: 'GET',
-		  url: './state/get',
-		  data: '',
-		  dataType: 'json',
-		  success: function(states) {
-			  var stateDiv = '<div class="btn-group.btn-group-justified" role="group" aria-label="">';
-			  stateDiv = stateDiv + '<h3 align="center"><span id="stateLabel" class="label label-danger">Mevcut Durum: '+  notificationItem.notificationStateString +'</span></h3>';
-			  $.each( states, function(i, state) {
-				  if(state.value == notificationItem.notificationState ){
-					  stateDiv = stateDiv + '<button onClick=changeNotificationState("'+ state.value +'","' + state.name + '") class="btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-ok-circle"></span> '+ state.name  +'</button>'; 
-				  }
-				  else{
-					  stateDiv = stateDiv + '<button onClick=changeNotificationState("'+ state.value +'","' + state.name + '") class="btn btn-default btn-lg btn-block"><span class="glyphicon glyphicon-ok-circle"></span> '+ state.name  +'</button>';
-				  }
-			  });
-			  stateDiv = stateDiv + '</div>';
-			  showDialog('Notifikasyon Durumu', stateDiv);
-		  },
-		  error: function() {
-		  }
+	makeServiceCall('GET', './state/get', '', 'json', function(err, jsonData){
+		if(err){
+			$('#failDismissible').show();
+			$('#failDismissibleStrong').html(err);
+		}
+		else{
+		  var stateDiv = '<div class="btn-group.btn-group-justified" role="group" aria-label="">';
+		  stateDiv = stateDiv + '<h3 align="center"><span id="stateLabel" class="label label-danger">Mevcut Durum: '+  notificationItem.notificationStateString +'</span></h3>';
+		  $.each( states, function(i, state) {
+			  if(state.value == notificationItem.notificationState ){
+				  stateDiv = stateDiv + '<button onClick=changeNotificationState("'+ state.value +'","' + state.name + '") class="btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-ok-circle"></span> '+ state.name  +'</button>'; 
+			  }
+			  else{
+				  stateDiv = stateDiv + '<button onClick=changeNotificationState("'+ state.value +'","' + state.name + '") class="btn btn-default btn-lg btn-block"><span class="glyphicon glyphicon-ok-circle"></span> '+ state.name  +'</button>';
+			  }
+		  });
+		  stateDiv = stateDiv + '</div>';
+		  showDialog('Notifikasyon Durumu', stateDiv);
+		}
 	});
 }
 
 function changeNotificationState(stateId, stateValue){
-	$.ajax({
-		  type: 'GET',
-		  url: './state/change?nid=' +selectedNotificationId + '&sid=' + stateId,
-		  data: '',
-		  dataType: 'json',
-		  success: function(response) {
-			  if(response.status == true){
-				  $('#stateLabel').text('Mevcut Durum: '+ stateValue);	  
-			  }
-		  },
-		  error: function() {
+	makeServiceCall('GET', './state/change?nid=' +selectedNotificationId + '&sid=' + stateId, '', 'json', function(err, jsonData){
+		if(err){
+			$('#failDismissible').show();
+			$('#failDismissibleStrong').html(err);
+		}
+		else{
+		  if(response.status == true){
+			  $('#stateLabel').text('Mevcut Durum: '+ jsonData);	  
 		  }
+		}
 	});
 }
 
@@ -342,19 +324,17 @@ function getImageForUser(userId, imageComponentId){
         }).fadeIn(400);
 	}
 	else{
-		$.ajax({
-			  type: 'GET',
-			  url: './image/get?uid=' + userId,
-			  data: '',
-			  dataType: 'json',
-			  success: function(jsonData) {
-				  pushImage(jsonData.userId, jsonData.imageBase64);
-				  $('#'+ imageComponentId).fadeOut(200, function() {
-					  $('#'+ imageComponentId).attr('src', 'data:image/png;base64,'+ jsonData.imageBase64);
-			        }).fadeIn(400);
-			  },
-			  error: function() {
-			  }
+		makeServiceCall('GET', './image/get?uid=' + userId, '', 'json', function(err, jsonData){
+			if(err){
+				$('#failDismissible').show();
+				$('#failDismissibleStrong').html(err);
+			}
+			else{
+			  pushImage(jsonData.userId, jsonData.imageBase64);
+			  $('#'+ imageComponentId).fadeOut(200, function() {
+				  $('#'+ imageComponentId).attr('src', 'data:image/png;base64,'+ jsonData.imageBase64);
+		        }).fadeIn(400);
+			}
 		});
 	}	
 }
@@ -367,19 +347,17 @@ function getTypeImageForUser(typeId, imageComponentId){
         }).fadeIn(400);
 	}
 	else{
-		$.ajax({
-			  type: 'GET',
-			  url: './image/type/get?tid=' + typeId,
-			  data: '',
-			  dataType: 'json',
-			  success: function(jsonData) {
-				  pushTypeImage(jsonData.userId, jsonData.imageBase64);
-				  $('#'+ imageComponentId).fadeOut(200, function() {
-					  $('#'+ imageComponentId).attr('src', 'data:image/png;base64,'+ jsonData.imageBase64);
-			        }).fadeIn(400);
-			  },
-			  error: function() {
-			  }
+		makeServiceCall('GET', './image/type/get?tid=' + typeId, '', 'json', function(err, jsonData){
+			if(err){
+				$('#failDismissible').show();
+				$('#failDismissibleStrong').html(err);
+			}
+			else{
+			  pushTypeImage(jsonData.userId, jsonData.imageBase64);
+			  $('#'+ imageComponentId).fadeOut(200, function() {
+				  $('#'+ imageComponentId).attr('src', 'data:image/png;base64,'+ jsonData.imageBase64);
+		        }).fadeIn(400);
+			}
 		});
 	}	
 }
@@ -392,19 +370,17 @@ function getStateImageForUser(stateId, imageComponentId){
         }).fadeIn(400);
 	}
 	else{
-		$.ajax({
-			  type: 'GET',
-			  url: './image/state/get?sid=' + stateId,
-			  data: '',
-			  dataType: 'json',
-			  success: function(jsonData) {
-				  pushStateImage(jsonData.userId, jsonData.imageBase64);
-				  $('#'+ imageComponentId).fadeOut(200, function() {
-					  $('#'+ imageComponentId).attr('src', 'data:image/png;base64,'+ jsonData.imageBase64);
-			        }).fadeIn(400);
-			  },
-			  error: function() {
-			  }
+		makeServiceCall('GET', './image/state/get?sid=' + stateId, '', 'json', function(err, jsonData){
+			if(err){
+				$('#failDismissible').show();
+				$('#failDismissibleStrong').html(err);
+			}
+			else{
+			  pushStateImage(jsonData.userId, jsonData.imageBase64);
+			  $('#'+ imageComponentId).fadeOut(200, function() {
+				  $('#'+ imageComponentId).attr('src', 'data:image/png;base64,'+ jsonData.imageBase64);
+		        }).fadeIn(400);
+			}
 		});
 	}	
 }

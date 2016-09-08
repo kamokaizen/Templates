@@ -81,6 +81,10 @@
 				  <button type="button" class="close" data-dissmiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				  <strong id="successDeleteDismissibleStrong"></strong>
 				</div>
+	       		<div class="alert alert-danger alert-dismissible" role="alert"  hidden="hidden" id="failDismissible">
+			  		<button type="button" class="close" data-dissmiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			  		<strong id="failDismissibleStrong"></strong>
+				</div>
                 <div class="col-lg-6">
                     <div class="chat-panel panel panel-default">
                         <div class="panel-heading">
@@ -421,6 +425,7 @@
     <!-- Custom Theme JavaScript -->
     <script src="<%=request.getContextPath()%>/resources/js/jquery/sb-admin-2.js"></script>
     <script src="<%=request.getContextPath()%>/resources/js/jquery/chance.min.js"></script>
+    <script src="<%=request.getContextPath()%>/resources/js/impl/call-service.js"></script>
 	<script src="<%=request.getContextPath()%>/resources/js/impl/home.js"></script>
 </body>
 
