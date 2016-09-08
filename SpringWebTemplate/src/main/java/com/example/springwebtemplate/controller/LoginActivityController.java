@@ -10,6 +10,8 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +25,10 @@ import com.example.springwebtemplate.controller.response.StatusDto;
 import com.example.springwebtemplate.controller.response.UserActivityDto;
 import com.example.springwebtemplate.controller.response.base.BaseRestResponse;
 import com.example.springwebtemplate.dbo.UserActivityDbo;
+import com.example.springwebtemplate.dbo.UserDbo;
 import com.example.springwebtemplate.dbo.enums.UserAuthenticationTypeEnum;
 import com.example.springwebtemplate.service.UserActivityService;
+import com.example.springwebtemplate.service.UserService;
 import com.example.springwebtemplate.util.ConstantKeys;
 import com.example.springwebtemplate.util.SpringPropertiesUtil;
 import com.example.springwebtemplate.util.StreamUtil;
@@ -38,6 +42,9 @@ public class LoginActivityController {
 	
 	@Autowired
 	private UserActivityService userActivityService;
+	
+	@Autowired
+	private UserService userService;
 		
 	@RequestMapping(value = "/default", method = RequestMethod.GET)
 	public String home(ModelMap model){
@@ -47,14 +54,12 @@ public class LoginActivityController {
 	
 	@RequestMapping(value = "/get", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public BaseRestResponse getUserActivities(@RequestParam(value = "uid", defaultValue = "0") String userId,
-											  @RequestParam(value = "pn", defaultValue = "1") String pageNumber) {
+	public BaseRestResponse getUserActivities(@RequestParam(value = "pn", defaultValue = "1") String pageNumber) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDbo user = userService.findUser(auth.getName());
 		PageDto<UserActivityDto> response = new PageDto<UserActivityDto>();
 		try {	
-			Criterion criterion = null;
-			if(userId.compareTo("0") != 0){
-				criterion = Restrictions.eq("user.userId", Long.valueOf(userId));
-			}
+			Criterion criterion = Restrictions.eq("user.userId", Long.valueOf(user.getUserId()));
 			
 			int totalPageNumber = this.userActivityService.getPageNumber(criterion);
 			List<UserActivityDbo> allActivities = this.userActivityService.getPageResult(criterion, Order.desc("storeDate"), Integer.parseInt(pageNumber));

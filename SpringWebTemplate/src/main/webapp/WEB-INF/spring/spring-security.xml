@@ -13,16 +13,17 @@
 	    <access-denied-handler error-page="/accessdenied"/>
 		<intercept-url pattern="favicon.ico" access="permitAll" />
 		
-		<intercept-url pattern="/home/**" access="hasRole('ROLE_ADMIN')" requires-channel="http" />
-		<intercept-url pattern="/city/**" access="hasRole('ROLE_ADMIN')" requires-channel="http" />
-		<intercept-url pattern="/type/**" access="hasRole('ROLE_ADMIN')" requires-channel="http" />
- 		<intercept-url pattern="/user/**" access="hasRole('ROLE_ADMIN')" requires-channel="http" />
-		<intercept-url pattern="/mail/**" access="hasRole('ROLE_ADMIN')" requires-channel="http" />
-		<intercept-url pattern="/test/**" access="hasRole('ROLE_ADMIN')" requires-channel="http" />
-		<intercept-url pattern="/victim/**" access="hasRole('ROLE_ADMIN')" requires-channel="http" />	
-		<intercept-url pattern="/dashboard/**" access="hasRole('ROLE_ADMIN')" requires-channel="http" />	
-		<intercept-url pattern="/cheat/**" access="hasRole('ROLE_ADMIN')" requires-channel="http" />
-		<intercept-url pattern="/loginactivity/**" access="hasRole('ROLE_ADMIN')" requires-channel="http" />				
+		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" requires-channel="http" />
+		<intercept-url pattern="/home/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" requires-channel="http" />
+		<intercept-url pattern="/city/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" requires-channel="http" />
+		<intercept-url pattern="/type/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" requires-channel="http" />
+ 		<intercept-url pattern="/user/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" requires-channel="http" />
+		<intercept-url pattern="/mail/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" requires-channel="http" />
+		<intercept-url pattern="/test/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" requires-channel="http" />
+		<intercept-url pattern="/victim/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" requires-channel="http" />	
+		<intercept-url pattern="/dashboard/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" requires-channel="http" />	
+		<intercept-url pattern="/cheat/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" requires-channel="http" />
+		<intercept-url pattern="/loginactivity/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" requires-channel="http" />				
 
 		<form-login login-page="/login" default-target-url="/home/default"
 			always-use-default-target="false"
@@ -43,8 +44,8 @@
 		</authentication-provider>
 	</authentication-manager>
 
-	<beans:bean id="passwordEncoder" class="com.example.springwebtemplate.util.BCryptPasswordEncoder" />
-		
+	<beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+ 		
 	<beans:bean id="customAuthenticationSuccessHandler" class="com.example.springwebtemplate.util.authentication.CustomAuthenticationSuccessHandler" />
 	<beans:bean id="customAuthenticationFailureHandler" class="com.example.springwebtemplate.util.authentication.CustomAuthenticationFailureHandler" />
     <beans:bean id="customLogoutSuccessHandler" class="com.example.springwebtemplate.util.authentication.CustomLogoutSuccessHandler" />

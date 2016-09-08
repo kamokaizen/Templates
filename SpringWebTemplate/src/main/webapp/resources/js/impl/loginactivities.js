@@ -45,7 +45,7 @@ $('#searchActivityTextField').keyup(function(){
 getuserActivities();
 
 function getuserActivities(){
-	makeServiceCall('GET', './get?uid=0&pn=' + userActivityPageNumber, '', 'json', function(err, jsonData){
+	makeServiceCall('GET', './get?pn=' + userActivityPageNumber, '', 'json', function(err, jsonData){
 		if(err){
 			$('#failDismissible').show();
 			$('#failDismissibleStrong').html(err);

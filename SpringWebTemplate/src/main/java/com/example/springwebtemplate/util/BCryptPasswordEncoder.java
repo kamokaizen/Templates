@@ -5,10 +5,9 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-public class BCryptPasswordEncoder implements PasswordEncoder {
+public class BCryptPasswordEncoder {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(BCryptPasswordEncoder.class);

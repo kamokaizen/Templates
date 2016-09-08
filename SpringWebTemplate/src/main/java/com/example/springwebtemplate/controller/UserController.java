@@ -8,7 +8,6 @@ import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.owasp.esapi.ESAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -83,15 +82,11 @@ public class UserController {
 	public BaseRestResponse getUserInfo(@RequestParam("uid") long userId,
 			Locale locale) {
 		try {
-			boolean validNumber = ESAPI.validator().isValidNumber("ESAPI Validation Secure Long", userId + "", 0,Long.MAX_VALUE, true);
-			if (validNumber) {
-				UserDbo user = userService.findById(userId);
-				if (user != null)
-					return new UserDto(user);
-				else
-					return new StatusDto(false, messageSource.getMessage("userNotFound", null, locale));
-			} else
-				return new StatusDto(false, messageSource.getMessage("invalidParameter", null, locale));
+			UserDbo user = userService.findById(userId);
+			if (user != null)
+				return new UserDto(user);
+			else
+				return new StatusDto(false, messageSource.getMessage("userNotFound", null, locale));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			log.error("Error occured: " + ex.getLocalizedMessage());

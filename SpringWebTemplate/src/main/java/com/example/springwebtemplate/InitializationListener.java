@@ -80,8 +80,13 @@ public class InitializationListener implements ServletContextListener {
 	private void checkAdminUser() {
 		try {
 			UserDbo adminUser = this.userService.findUser("administrator");
+			UserDbo normalUser = this.userService.findUser("user");
 			if (adminUser == null) {
-				this.insertUser();
+				this.insertAdminUser();
+				indexItems();
+			}
+			if (normalUser == null) {
+				this.insertNormalUser();
 				indexItems();
 			}
 		} catch (Exception e) {
@@ -89,8 +94,9 @@ public class InitializationListener implements ServletContextListener {
 		}
 	}
 
-	private void insertUser() {
+	private void insertAdminUser() {
 		try {
+			// default admin
 			UserDbo userDbo = new UserDbo();
 			userDbo.setName("admin");
 			userDbo.setSurname("admin");
@@ -110,6 +116,28 @@ public class InitializationListener implements ServletContextListener {
 		}
 	}
 
+	private void insertNormalUser() {
+		try {			
+			// default user
+			UserDbo userDbo = new UserDbo();
+			userDbo.setName("user");
+			userDbo.setSurname("user");
+			userDbo.setUsername("user");
+			userDbo.setEmail("user@springwebtemplate.com");
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			String hashedPassword = encoder.encodePassword("123456",encoder.genSalt());
+			userDbo.setRole(UserRoleEnum.ROLE_USER);
+			userDbo.setSex(UserTypeEnum.MALE);
+			userDbo.setPassword(hashedPassword);
+			userDbo.setCity(this.cityService.findCityByPlateNumber("06"));
+			userDbo.setAuthorizationId("31b1c1aa-8f9e-4e9e-a43e-7228a35e39a4");
+			userDbo.setBirtDate(1987, 1, 22);
+			this.userService.saveUser(userDbo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private void insertCities() {
 		try {
 			List<CityDbo> allCities = cityService.getAllCities();

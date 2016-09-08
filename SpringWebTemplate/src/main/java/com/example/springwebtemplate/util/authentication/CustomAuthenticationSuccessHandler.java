@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import com.example.springwebtemplate.dbo.UserActivityDbo;
 import com.example.springwebtemplate.dbo.UserDbo;
 import com.example.springwebtemplate.dbo.enums.UserAuthenticationTypeEnum;
+import com.example.springwebtemplate.dbo.enums.UserRoleEnum;
 import com.example.springwebtemplate.service.UserActivityService;
 import com.example.springwebtemplate.service.UserService;
 import com.example.springwebtemplate.util.ip.IPUtil;
@@ -40,7 +41,8 @@ public class CustomAuthenticationSuccessHandler implements
 			Authentication authentication) throws IOException, ServletException {
 		// do some logic here if you want something to be done whenever
 		// the user successfully logs in.
-
+		String homePage = "home/default";
+		
 		HttpSession session = httpServletRequest.getSession();
 		User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		session.setAttribute("username", authUser.getUsername());
@@ -51,6 +53,10 @@ public class CustomAuthenticationSuccessHandler implements
 			session.setAttribute("userId", user.getUserId());
 			
 			if(user != null){
+				if(user.getRole() == UserRoleEnum.ROLE_ADMIN){
+					homePage = "admin/default";
+				}
+				
 				//save user login activity
 				UserActivityDbo activity = new UserActivityDbo();
 				activity.setUser(user);
@@ -67,7 +73,7 @@ public class CustomAuthenticationSuccessHandler implements
 		httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 
 		// //we will redirect the user after successfully login
-		httpServletResponse.sendRedirect("home/default");
+		httpServletResponse.sendRedirect(homePage);
 		
 		logger.info("User [ " + authUser.getUsername() + " ] authentication succeeded!");
 	}

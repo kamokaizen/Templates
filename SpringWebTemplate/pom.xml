@@ -20,7 +20,6 @@
 		<java-mail-version>1.4.3</java-mail-version>
 		<jackson-version>2.7.1</jackson-version>
 		<quartz-version>2.2.1</quartz-version>
-		<esapi-version>2.1.0</esapi-version>
 		<thumbnailator-version>0.4.8</thumbnailator-version>
 		<bouncycastle-version>140</bouncycastle-version>
 		<commons-fileupload-version>1.2.2</commons-fileupload-version>
@@ -289,20 +288,7 @@
 			<artifactId>bcprov-jdk16</artifactId>
 			<version>${bouncycastle-version}</version>
 		</dependency>
-		
-		<!-- ESAPI 2.1.0 -->
-		<dependency>
-			<groupId>org.owasp.esapi</groupId>
-			<artifactId>esapi</artifactId>
-			<version>${esapi-version}</version>
-			<exclusions>
-				<exclusion>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		
+				
 		<!-- Java Mail API -->
 	    <dependency>
 		    <groupId>javax.mail</groupId>
