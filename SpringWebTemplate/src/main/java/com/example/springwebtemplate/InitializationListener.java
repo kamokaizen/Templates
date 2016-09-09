@@ -48,7 +48,7 @@ public class InitializationListener implements ServletContextListener {
 					.getAutowireCapableBeanFactory().autowireBean(this);
 
 			checkCities();
-			checkAdminUser();
+			checkUser();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -77,16 +77,21 @@ public class InitializationListener implements ServletContextListener {
 		}
 	}
 
-	private void checkAdminUser() {
+	private void checkUser() {
 		try {
 			UserDbo adminUser = this.userService.findUser("administrator");
 			UserDbo normalUser = this.userService.findUser("user");
+			UserDbo anonymousUser = this.userService.findUser("anonymous");
 			if (adminUser == null) {
 				this.insertAdminUser();
 				indexItems();
 			}
 			if (normalUser == null) {
 				this.insertNormalUser();
+				indexItems();
+			}
+			if (anonymousUser == null) {
+				this.insertAnonymousUser();
 				indexItems();
 			}
 		} catch (Exception e) {
@@ -138,15 +143,35 @@ public class InitializationListener implements ServletContextListener {
 		}
 	}
 	
+	private void insertAnonymousUser() {
+		try {			
+			// anonymous user
+			UserDbo userDbo = new UserDbo();
+			userDbo.setName("anonymous");
+			userDbo.setSurname("anonymous");
+			userDbo.setUsername("anonymous");
+			userDbo.setEmail("anonymous@springwebtemplate.com");
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			String hashedPassword = encoder.encodePassword("123456",encoder.genSalt());
+			userDbo.setRole(UserRoleEnum.ROLE_ANONYMOUS);
+			userDbo.setSex(UserTypeEnum.MALE);
+			userDbo.setPassword(hashedPassword);
+			userDbo.setCity(this.cityService.findCityByPlateNumber("06"));
+			userDbo.setAuthorizationId("21b1c1aa-8f9e-4e9e-a43e-7228a35e39a1");
+			userDbo.setBirtDate(1982, 1, 22);
+			this.userService.saveUser(userDbo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private void insertCities() {
 		try {
 			List<CityDbo> allCities = cityService.getAllCities();
 			if (allCities == null || allCities.size() < 1) {
-				InputStream stream = StreamUtil
-						.getStream(ConstantKeys.turkey_cities);
+				InputStream stream = StreamUtil.getStream(ConstantKeys.turkey_cities);
 				DataInputStream in = new DataInputStream(stream);
-				BufferedReader br = new BufferedReader(new InputStreamReader(
-						in, "UTF8"));
+				BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF8"));
 
 				String strLine;
 				List<CityDbo> cityList = new ArrayList<CityDbo>();

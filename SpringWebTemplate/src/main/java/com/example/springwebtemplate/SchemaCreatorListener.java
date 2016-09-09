@@ -27,8 +27,7 @@ public class SchemaCreatorListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent sce) {
 		// Schema creation
 		try {			
-			InputStream propertyStream = StreamUtil
-					.getStream(ConstantKeys.database_config);
+			InputStream propertyStream = StreamUtil.getStream(ConstantKeys.database_config);
 			Properties property = new Properties();
 			property.load(propertyStream);
 			SchemaCreator.createSchema(property.getProperty("jdbc.driver"),
